@@ -39,7 +39,7 @@ $db_link = mysqli_connect (
       <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-align-center-sm u-align-center-xs u-border-10 u-border-palette-1-base u-container-style u-expanded-width-sm u-expanded-width-xs u-group u-group-1">
           <div class="u-container-layout u-valign-top u-container-layout-1">
-            <h3 class="u-align-center-lg u-align-center-md u-align-center-xl u-text u-text-default u-text-1">severnauten login</h3>
+            <h3 class="u-align-center-lg u-align-center-md u-align-center-xl u-text u-text-default u-text-1">Admin Login</h3>
             <div class="u-form u-form-1">
               <form action="admin.php" method="POST" style="padding: 10px" source="email" name="form">
                 <div class="u-form-email u-form-group u-form-group-2">
