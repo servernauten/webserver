@@ -14,8 +14,8 @@ $db_link = mysqli_connect (
 
     if ( !empty($_POST['login']) ){
 
-      include('lib/function/loginCustomers.php');
-      loginCustomers($_POST['CustomersEmail'], $_POST['CustomersPassword'], $db_link);
+      include('lib/function/loginAdmins.php');
+      loginAdmins($_POST['AdminsEmail'], $_POST['AdminsPassword'], $db_link);
     }
 
 ?>
@@ -41,14 +41,14 @@ $db_link = mysqli_connect (
           <div class="u-container-layout u-valign-top u-container-layout-1">
             <h3 class="u-align-center-lg u-align-center-md u-align-center-xl u-text u-text-default u-text-1">severnauten login</h3>
             <div class="u-form u-form-1">
-              <form action="index.php" method="POST" style="padding: 10px" source="email" name="form">
+              <form action="admin.php" method="POST" style="padding: 10px" source="email" name="form">
                 <div class="u-form-email u-form-group u-form-group-2">
                   <label for="email-a97b" class="u-form-control-hidden u-label">E-Mail</label>
-                  <input type="email" placeholder="E-Mail" name="CustomersEmail" class="u-border-1 u-border-grey-30 u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-white" required="">
+                  <input type="email" placeholder="E-Mail" name="AdminsEmail" class="u-border-1 u-border-grey-30 u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-white" required="">
                 </div>
                 <div class="u-form-email u-form-group u-form-group-2">
                   <label for="email-a97b" class="u-form-control-hidden u-label">Passwort</label>
-                  <input type="password" placeholder="Passwort" name="CustomersPassword" class="u-border-1 u-border-grey-30 u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-white" required="">
+                  <input type="password" placeholder="Passwort" name="AdminsPassword" class="u-border-1 u-border-grey-30 u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-white" required="">
                 </div>
                 <div class="u-align-center u-form-group u-form-submit u-form-group-3">
                   <a href="#" class="u-btn u-btn-submit u-button-style">Login</a>
