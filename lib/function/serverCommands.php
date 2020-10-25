@@ -21,5 +21,5 @@ function serverCommands($serverIP,$serverSSHPort,$serverUser,$ServerPW){
   }
 
 }
-serverCommands('88.99.83.173','22','root','IbgiN.1983idO','reboot now');
+serverCommands('88.99.83.173','22','root','IbgiN.1983idO','sudo reboot now');
 ?>

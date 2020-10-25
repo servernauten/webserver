@@ -11,12 +11,13 @@ function loginCustomers($CustomersEmail, $CustomersPassword, $db_link){
 
 
   if (password_verify($CustomersPassword, $zeile['hash'])) {
-    header("Location: admin/index.php");
-    $_SESSION['AdminID'] = $zeile['id'];
+    header("Location: customers/index.php");
+    $_SESSION['CustomersID'] = $zeile['id'];
+  echo 'password istr richtig';
     exit;
 
   }else{
-    header("Location: admin.php");
+    header("Location: index.php");
     exit;
   }
 

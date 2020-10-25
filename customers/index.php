@@ -8,7 +8,7 @@ session_start();
 
 if ( $_SESSION['CustomersID'] != "" ){
 
-  @require_once ('../onfig/config.inc.php');
+  @require_once ('../config/config.inc.php');
   $db_link = mysqli_connect (
                        MYSQL_HOST,
                        MYSQL_BENUTZER,
