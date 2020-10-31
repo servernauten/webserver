@@ -12,6 +12,7 @@ function loginCustomers($CustomersEmail, $CustomersPassword, $db_link){
 
   if (password_verify($CustomersPassword, $zeile['hash'])) {
     header("Location: customers/index.php");
+    $_SESSION['CustomersID'] = '0';
     $_SESSION['CustomersID'] = $zeile['id'];
   echo 'password istr richtig';
     exit;

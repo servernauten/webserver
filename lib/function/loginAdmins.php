@@ -12,6 +12,7 @@ function loginAdmins($AdminsEmail, $AdminsPassword, $db_link){
 
   if (password_verify($AdminsPassword, $zeile['hash'])) {
     header("Location: admin/index.php");
+    $_SESSION['AdminID'] = '0';
     $_SESSION['AdminID'] = $zeile['id'];
     exit;
 

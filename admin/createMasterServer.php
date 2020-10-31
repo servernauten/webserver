@@ -23,6 +23,9 @@ echo '
         SSH2 Port: <input type="number" name="sshportMasterServer" /><br>
         SSH2 Name: <input type="name" name="sshnameMasterServer" /><br>
         SSH2 Passwort: <input type="text" name="sshpwMasterServer" /><br>
+        CPU Core: <input type="number" name="cpucoreMasterServer" /><br>
+        RAM: <input type="number" name="ramMasterServer" /><br>
+        <input type="submit" name="submitMasterServer" value="speichern" />
       </form>
      ';
 

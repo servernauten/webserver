@@ -16,6 +16,12 @@ if ( $_SESSION['AdminID'] != "" ){
                        MYSQL_DATENBANK
                       );
 
+  $sql = "SELECT * FROM `admins` WHERE `id` = '{$_SESSION['AdminID']}'";
+  $db_erg = mysqli_query( $db_link, $sql );
+  $zeile = mysqli_fetch_array( $db_erg, MYSQLI_ASSOC);
+
+  echo $zeile['id'];
+
 
 }else{
   header("Location: ../admin.php");
