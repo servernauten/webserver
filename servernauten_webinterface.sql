@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 11. Jan 2021 um 05:26
+-- Erstellungszeit: 16. Jan 2021 um 08:03
 -- Server-Version: 10.4.17-MariaDB
 -- PHP-Version: 8.0.0
 
@@ -29,6 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -37,8 +39,8 @@ CREATE TABLE `admins` (
 -- Daten für Tabelle `admins`
 --
 
-INSERT INTO `admins` (`id`, `email`, `password`) VALUES
-(1, 'sebastian2@wulf.email', '$2y$10$.MhC3z2IAtmMN8z42yV61uSQqs1T5uwb/.c8bgxHBSkN8Qg3Ep4hm');
+INSERT INTO `admins` (`id`, `firstname`, `surname`, `email`, `password`) VALUES
+(1, 'Sebastian', 'Wulf', 'sebastian2@wulf.email', '$2y$10$.MhC3z2IAtmMN8z42yV61uSQqs1T5uwb/.c8bgxHBSkN8Qg3Ep4hm');
 
 -- --------------------------------------------------------
 
