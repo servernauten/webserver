@@ -1,3 +1,15 @@
+<?php
+@include('../inc/inputCheck/inputCheck.inc.php');
+@include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
+// Datenbank Verbindung wird hergestellt
+$pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
+
+if( !empty($_POST['submitCreateCustomer']) ){
+
+$createCustomer = '1';
+@include('inc/createCustomer/createCustomer.inc.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -178,517 +190,186 @@
   </nav>
     <?php include('tpl/sidebar.tpl.php'); ?>
     <main>
-        <div class="container-fluid">
+      <form method="POST" action="createCustomer.php">
+        <div class="container-fluid ">
+          <div class="row">
+              <div class="col-12">
+
+                  <h1>Create Customer</h1>
+                  <div class="separator mb-5"></div>
+              </div>
+          </div>
+
             <div class="row">
-                <div class="col-12">
-
-                    <h1>Create Customer</h1>
-                    <div class="separator mb-5"></div>
-                </div>
-            </div>
-
-            <div class="row">
 
                 <div class="col-12">
-                   <!-- Start Company / Address -->
-                    <div class="card mb-4">
-                      <div class="card-body">
-                          <h5 class="mb-4">Company / Address</h5>
-                          <!-- Start Customer Type -->
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <label class="input-group-text" for="inputGroupSelect01">Customer Type</label>
+                  <!-- Start Company / Address -->
+                  <div class="row">
+                      <div class="col-12 col-xl-6 mb-4">
+                          <div class="card h-100">
+                              <div class="card-body">
+                                  <h5 class="mb-4">Company</h5>
+                                  <!-- Start Customer Type -->
+                                  <div class="form-group mb-3">
+                                      <label>Customer Type</label>
+                                      <select name="clientType" class="form-control select2-single" data-width="100%">
+                                              <option value="1">Firmenkunde</option>
+                                              <option value="2">Privatkunde</option>
+                                      </select>
+                                  </div>
+                                  <!-- End Customer Type -->
+                                  <!-- Start Company -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Company</label>
+                                      <input name="company" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Company -->
                               </div>
-                              <select class="custom-select" id="inputGroupSelect01">
-                                <option value="0" selected>Choose...</option>
-                                  <option value="1">Firmenkunde</option>
-                                  <option value="2">Privatkunde</option>
-                              </select>
                           </div>
-                          <!-- End Customer Type -->
-                          <!-- Start Company -->
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text" id="basic-addon1">Company</span>
-                              </div>
-                              <input type="text" class="form-control"
-                                  aria-describedby="basic-addon1">
-                          </div>
-                          <!-- End Company -->
-                          <!-- Start Address -->
-                          <div class="input-group mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Address</span>
-                                </div>
-                                <textarea class="form-control" aria-label="With textarea"></textarea>
-                            </div>
-                          </div>
-                          <!-- End Address -->
-                          <!-- End Zip / Location -->
-                          <div class="input-group mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Zip / Location</span>
-                                </div>
-                                <input type="text" class="form-control">
-                                <input type="text" class="form-control">
-                            </div>
-                          </div>
-                          <!-- End Zip / Location -->
-                          <!-- Start Country Type -->
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <label class="input-group-text" for="inputGroupSelect01">Country</label>
-                              </div>
-                              <select class="custom-select" id="inputGroupSelect01">
-                                <option value="0" selected>Choose...</option>
-                                  <option value="DE">Deutschland</option>
-                                  <option value="US">USA</option>
-                              </select>
-                          </div>
-                          <!-- End Country Type -->
                       </div>
-                    </div>
-                    <!-- End Company / Address -->
 
-                    <!-- Start Contact Person -->
-                     <div class="card mb-4">
-                       <div class="card-body">
-                           <h5 class="mb-4">Contact Person</h5>
-                           <!-- Start Salutation -->
-                           <div class="input-group mb-3">
-                               <div class="input-group-prepend">
-                                   <label class="input-group-text" for="inputGroupSelect01">Salutation</label>
-                               </div>
-                               <select class="custom-select" id="inputGroupSelect01">
-                                 <option value="0" selected>Choose...</option>
-                                   <option value="1">Herr</option>
-                                   <option value="2">Frau</option>
-                               </select>
-                           </div>
-                           <!-- End Salutation -->
-                           <!-- Start Firstname -->
-                           <div class="input-group mb-3">
-                               <div class="input-group-prepend">
-                                   <span class="input-group-text" id="basic-addon1">Firstname</span>
-                               </div>
-                               <input type="text" class="form-control"
-                                   aria-describedby="basic-addon1">
-                           </div>
-                           <!-- End Firstname -->
-                           <!-- Start Surname -->
-                           <div class="input-group mb-3">
-                               <div class="input-group-prepend">
-                                   <span class="input-group-text" id="basic-addon1">Surname</span>
-                               </div>
-                               <input type="text" class="form-control"
-                                   aria-describedby="basic-addon1">
-                           </div>
-                           <!-- End Surname -->
-                       </div>
-                     </div>
-                     <!-- End Contact Person -->
+                      <div class="col-12 col-xl-6 mb-4">
+                          <div class="card h-100">
+                              <div class="card-body">
+                                  <h5 class="mb-4">Address</h5>
+                                  <!-- Start Address -->
+                                  <div class="form-group mb-3">
+                                      <label for="Address">Address</label>
+                                      <textarea name="address" type="text" class="form-control" aria-label="With textarea"></textarea>
+                                  </div>
+                                  <!-- End Address -->
+                                  <!-- Start Zip / Location -->
+                                  <div class="form-group mb-3">
+                                      <label for="Zip / Location">Zip / Location</label>
+                                      <div class="input-group">
+                                        <input name="zip" type="text" class="form-control"
+                                            aria-describedby="basic-addon1" placeholder="zip">
+                                          <span class="input-group-addon"></span>
+                                          <input name="location" type="text" class="form-control"
+                                              aria-describedby="basic-addon1" placeholder="location">
+                                      </div>
+                                  </div>
+                                  <!-- End Zip / Location -->
+                                  <!-- Start Country Type -->
+                                  <div class="form-group mb-3">
+                                      <label>Country</label>
+                                      <select name="country" class="form-control select2-single" data-width="100%">
 
-                     <!-- Start Contact Details -->
-                      <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Contact Details</h5>
-                            <!-- Start Mobile -->
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Mobile</span>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                            <!-- End Mobile -->
-                            <!-- Start Phone -->
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Phone</span>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                            <!-- End Phone -->
-                            <!-- Start Fax -->
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Fax</span>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                            <!-- End Fax -->
-                            <!-- Start Mail -->
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Mail</span>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                            <!-- End Mail -->
-                            <!-- Start Homepage -->
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Homepage</span>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                            <!-- End Homepage -->
-
-                        </div>
+                                              <option value="DE">Deutschland</option>
+                                              <option value="US">USA</option>
+                                      </select>
+                                  </div>
+                                  <!-- End Country Type -->
+                              </div>
+                          </div>
                       </div>
-                      <!-- End Contact Details -->
+                  </div>
+                  <!-- End Company / Address -->
 
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Sizing</h5>
-                            <div class="input-group input-group-sm mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Small"
-                                    aria-describedby="inputGroup-sizing-sm">
-                            </div>
+                  <!-- Start Contact Person -->
+                  <div class="row">
+                      <div class="col-12 col-xl-6 mb-4">
+                          <div class="card h-100">
+                              <div class="card-body">
+                                  <h5 class="mb-4">Contact Person</h5>
+                                  <!-- Start Salutation -->
+                                  <div class="form-group mb-3">
+                                      <label>Salutation</label>
+                                      <select name="salutation" class="form-control select2-single" data-width="100%">
+                                              <option value="1">Herr</option>
+                                              <option value="2">Frau</option>
+                                      </select>
+                                  </div>
+                                  <!-- End Salutation -->
+                                  <!-- Start Firstname -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Firstname</label>
+                                      <input name="firstname" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Firstname -->
+                                  <!-- Start Surname -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Surname</label>
+                                      <input name="surname" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Surname -->
+                                  <!-- Start Login Active -->
+                                  <div class="form-group row mb-1">
+                                      <label class="col-12 col-form-label">Login Activate</label>
+                                      <div class="col-12">
+                                          <div class="custom-switch custom-switch-secondary mb-2 custom-switch-small">
+                                              <input name="loginActive" value="1" class="custom-switch-input" id="switchS2" type="checkbox">
+                                              <label class="custom-switch-btn" for="switchS2"></label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <!-- End Login Active -->
+                                  <!-- Start Newsletter -->
+                                  <div class="form-group row mb-1">
+                                      <label class="col-12 col-form-label">Newsletter</label>
+                                      <div class="col-12">
+                                          <div class="custom-switch custom-switch-secondary mb-2 custom-switch-small">
+                                              <input name="newsletter" value="1" class="custom-switch-input" id="switchS2" type="checkbox">
+                                              <label class="custom-switch-btn" for="switchS2"></label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <!-- End Newsletter -->
+                              </div>
+                          </div>
 
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Default"
-                                    aria-describedby="inputGroup-sizing-default">
-                            </div>
-
-                            <div class="input-group input-group-lg">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-lg">Large</span>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Large"
-                                    aria-describedby="inputGroup-sizing-sm">
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Checkboxes and radios</h5>
-
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Text input with checkbox">
-                            </div>
-
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="radio" aria-label="Radio button for following text input">
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Text input with radio button">
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Multiple Inputs</h5>
-
-
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">First and last name</span>
-                                </div>
-                                <input type="text" class="form-control">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Multiple Addons</h5>
-
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                                    <span class="input-group-text">0.00</span>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                            </div>
-
-                            <div class="input-group">
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">$</span>
-                                    <span class="input-group-text">0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Button Addons</h5>
-
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" aria-label=""
-                                    aria-describedby="basic-addon1">
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Recipient's username"
-                                    aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" aria-label=""
-                                    aria-describedby="basic-addon1">
-                            </div>
-
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Recipient's username"
-                                    aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Buttons with Dropdowns</h5>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">Dropdown</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                            </div>
-
-                            <div class="input-group">
-                                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">Dropdown</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Segmented Buttons</h5>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-outline-secondary">Action</button>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control"
-                                    aria-label="Text input with segmented dropdown button">
-                            </div>
-
-                            <div class="input-group">
-                                <input type="text" class="form-control"
-                                    aria-label="Text input with segmented dropdown button">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary">Action</button>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Custom Select</h5>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                </div>
-                                <select class="custom-select" id="inputGroupSelect01">
-                                    <option selected>Choose...</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <select class="custom-select" id="inputGroupSelect02">
-                                    <option selected>Choose...</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <div class="input-group-append">
-                                    <label class="input-group-text" for="inputGroupSelect02">Options</label>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                                <select class="custom-select" id="inputGroupSelect03">
-                                    <option selected>Choose...</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-
-                            <div class="input-group">
-                                <select class="custom-select" id="inputGroupSelect04">
-                                    <option selected>Choose...</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-4">Custom File Input</h5>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile01">
-                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile02">
-                                    <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile03">
-                                    <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile04">
-                                    <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                      </div>
+                      <!-- End Contact Person -->
+                      <!-- Start Contact Details -->
+                      <div class="col-12 col-xl-6 mb-4">
+                          <div class="card h-100">
+                              <div class="card-body">
+                                  <h5 class="mb-4">Contact Details</h5>
+                                  <!-- Start Mobile -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Mobile</label>
+                                      <input name="mobile" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Mobile -->
+                                  <!-- Start Phone -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Phone</label>
+                                      <input name="phone" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Phone -->
+                                  <!-- Start Fax -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Fax</label>
+                                      <input name="fax" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Fax -->
+                                  <!-- Start Mail -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Mail</label>
+                                      <input name="mail" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <!-- End Mail -->
+                                  <!-- Start Homepage -->
+                                  <div class="form-group mb-3">
+                                      <label for="Company">Homepage</label>
+                                      <input name="homepage" type="text" class="form-control"
+                                          aria-describedby="basic-addon1">
+                                  </div>
+                                  <input name="submitCreateCustomer" type="submit" class="btn btn-primary d-block mt-3" value="Create Customer"></input>
+                                  <!-- End Homepage -->
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- End Contact Details -->
+                  </form>
     </main>
 
     <footer class="page-footer">
@@ -696,7 +377,20 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 col-sm-6">
-                        <p class="mb-0 text-muted">servernauten.de</p>
+                        <p class="mb-0 text-muted">ColoredStrategies 2019</p>
+                    </div>
+                    <div class="col-sm-6 d-none d-sm-block">
+                        <ul class="breadcrumb pt-0 pr-0 float-right">
+                            <li class="breadcrumb-item mb-0">
+                                <a href="#" class="btn-link">Review</a>
+                            </li>
+                            <li class="breadcrumb-item mb-0">
+                                <a href="#" class="btn-link">Purchase</a>
+                            </li>
+                            <li class="breadcrumb-item mb-0">
+                                <a href="#" class="btn-link">Docs</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -705,22 +399,23 @@
 
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="js/vendor/Chart.bundle.min.js"></script>
-    <script src="js/vendor/chartjs-plugin-datalabels.js"></script>
     <script src="js/vendor/moment.min.js"></script>
     <script src="js/vendor/fullcalendar.min.js"></script>
-    <script src="js/vendor/datatables.min.js"></script>
     <script src="js/vendor/perfect-scrollbar.min.js"></script>
-    <script src="js/vendor/progressbar.min.js"></script>
-    <script src="js/vendor/jquery.barrating.min.js"></script>
+    <script src="js/vendor/bootstrap-notify.min.js"></script>
     <script src="js/vendor/select2.full.js"></script>
-    <script src="js/vendor/nouislider.min.js"></script>
     <script src="js/vendor/bootstrap-datepicker.js"></script>
-    <script src="js/vendor/Sortable.js"></script>
+    <script src="js/vendor/dropzone.min.js"></script>
+    <script src="js/vendor/bootstrap-tagsinput.min.js"></script>
+    <script src="js/vendor/nouislider.min.js"></script>
+    <script src="js/vendor/jquery.barrating.min.js"></script>
+    <script src="js/vendor/cropper.min.js"></script>
+    <script src="js/vendor/typeahead.bundle.js"></script>
     <script src="js/vendor/mousetrap.min.js"></script>
-    <script src="js/vendor/glide.min.js"></script>
+    <script src="js/dore-plugins/select.from.library.js"></script>
     <script src="js/dore.script.js"></script>
     <script src="js/scripts.single.theme.js"></script>
+
 </body>
 
 </html>

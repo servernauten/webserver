@@ -1,5 +1,6 @@
 <?php
 if( $createCustomer == '1' ){
+
   $clientType             = inputCheck($_POST['clientType']);
   $company                = inputCheck($_POST['company']);
   $address                = inputCheck($_POST['address']);
@@ -31,79 +32,3 @@ if( $createCustomer == '1' ){
   }
 }
 ?>
-
-
-
-
-
-<?php
-
-@include('../inc/inputCheck/inputCheck.inc.php');
-@include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
-// Datenbank Verbindung wird hergestellt
-$pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
-
-
-
-if( !empty($_POST['submitCreateCustomer']) ){
-$$createCustomer = '1';
-@include('inc/createCustomer/createCustomer.inc.php');
-}
-?>
-<form method="POST" action="createCustomer.php">
-  clientType
-  <select name="clientType">
-    <option value="1">Firmenkunde</option>
-    <option value="2">Privatkunde</option>
-</select>
-<br>
-company
-<input type="text" name="company" />
-<br>
-address
-<input type="text" name="address" />
-<br>
-zip
-<input type="text" name="zip" />
-<br>
-location
-<input type="text" name="location" />
-<br>
-country
-<input type="text" name="country" />
-<br>
-salutation
-  <select name="salutation">
-    <option value="1">Herr</option>
-    <option value="2">Frau</option>
-  </select>
-<br>
-firstname
-<input type="text" name="firstname" />
-<br>
-surname
-<input type="text" name="surname" />
-<br>
-mobile
-<input type="text" name="mobile" />
-<br>
-phone
-<input type="text" name="phone" />
-<br>
-fax
-<input type="text" name="fax" />
-<br>
-mail
-<input type="text" name="mail" />
-<br>
-homepage
-<input type="text" name="homepage" />
-<br>
-loginActive
-<input type="checkbox" name="loginActive" value="1">
-<br>
-newsletter
-<input type="checkbox" name="newsletter" value="1">
-<br>
-<input type="submit" name="submitCreateCustomer" value="Create Customer" />
-</form>
