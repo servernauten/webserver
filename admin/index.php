@@ -7,6 +7,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
 
   if( $_SESSION['AdminSessionTrue'] != '1' ){
     header("Location: ../admin.php");
+    exit;
   }
   else{
     if( $_SESSION['AdminSessionTrue'] == '1' ){
@@ -283,17 +284,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
         </div>
     </main>
 
-    <footer class="page-footer">
-        <div class="footer-content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <p class="mb-0 text-muted">servernauten.de</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include('tpl/footer.tpl.php'); ?>
 
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
