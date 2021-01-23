@@ -7,6 +7,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
 
   if( $_SESSION['AdminSessionTrue'] != '1' ){
     header("Location: ../admin.php");
+    exit;
   }
   else{
     if( $_SESSION['AdminSessionTrue'] == '1' ){
@@ -16,6 +17,11 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          $adminFirstname  = $row['firstname'];
          $adminSurname    = $row['surname'];
 
+      }
+      if (!empty($_POST['submitCreateCustomer']) ){
+        $createCustomer = '1';
+        include('../inc/inputCheck/inputCheck.inc.php');
+        include('inc/createCustomer/createCustomer.inc.php');
       }
     }
   }
@@ -148,14 +154,14 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <div class="form-group mb-3">
                                       <label for="Company">Firstname</label>
                                       <input name="firstname" type="text" class="form-control"
-                                          aria-describedby="basic-addon1">
+                                          aria-describedby="basic-addon1" required>
                                   </div>
                                   <!-- End Firstname -->
                                   <!-- Start Surname -->
                                   <div class="form-group mb-3">
                                       <label for="Company">Surname</label>
                                       <input name="surname" type="text" class="form-control"
-                                          aria-describedby="basic-addon1">
+                                          aria-describedby="basic-addon1" required>
                                   </div>
                                   <!-- End Surname -->
                                   <!-- Start Login Active -->
@@ -163,8 +169,8 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                       <label class="col-12 col-form-label">Login Activate</label>
                                       <div class="col-12">
                                           <div class="custom-switch custom-switch-secondary mb-2 custom-switch-small">
-                                              <input name="loginActive" value="1" class="custom-switch-input" id="switchS2" type="checkbox">
-                                              <label class="custom-switch-btn" for="switchS2"></label>
+                                              <input name="loginActive" value="1" class="custom-switch-input" id="switchS1" type="checkbox">
+                                              <label class="custom-switch-btn" for="switchS1"></label>
                                           </div>
                                       </div>
                                   </div>
@@ -234,30 +240,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                   </form>
     </main>
 
-    <footer class="page-footer">
-        <div class="footer-content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <p class="mb-0 text-muted">ColoredStrategies 2019</p>
-                    </div>
-                    <div class="col-sm-6 d-none d-sm-block">
-                        <ul class="breadcrumb pt-0 pr-0 float-right">
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Review</a>
-                            </li>
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Purchase</a>
-                            </li>
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Docs</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include('tpl/footer.tpl.php'); ?>
 
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
