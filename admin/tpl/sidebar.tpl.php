@@ -32,13 +32,13 @@
                     <div id="collapseAuthorization" class="collapse show">
                         <ul class="list-unstyled inner-level-menu">
                             <li>
-                                <a href="index.php?adminPage?=CustomerOverview">
+                                <a href="overviewCustomers.php">
                                     <i class="simple-icon-people"></i> <span
                                         class="d-inline-block">Costumers Overview</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="index.php?adminPage?=CustomerCreate">
+                                <a href="createCustomer.php">
                                     <i class="simple-icon-user-follow"></i> <span
                                         class="d-inline-block">Create Customers</span>
                                 </a>
