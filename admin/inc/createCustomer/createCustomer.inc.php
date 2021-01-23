@@ -23,12 +23,19 @@ if( $createCustomer == '1' ){
   $customerTokenFirst     = openssl_random_pseudo_bytes(128); // Erstellt einen Random Token
   $customerToken          = bin2hex($customerTokenFirst); // Speichert den Token in $token
 
-  $statement = $pdo->prepare("INSERT INTO `customers`(`id`, `salutation_id`, `customerType_id`, `email`, `company`, `address`, `zip`, `location`, `country_code`, `firstname`, `surname`, `mobile`, `phone`, `fax`, `mail`, `homepage`, `loginActive`, `newsletter`, `customerToken`, `hash`)
-                              VALUES ( :customerID, :salutation_id, :customerType_id, :email, :company, :address, :zip, :location, :country_code, :firstname, :surname, :mobile, :phone, :fax, :mail, :homepage, :loginActive, :newsletter, :customerToken, :hash)");
-  $statement->execute(array('customerID' => NULL, 'salutation_id' => $salutation, 'customerType_id' => $clientType, 'email' => $mail, 'company' => $company, 'address' => $address, 'zip' => $zip, 'location' => $location, 'country_code' => $country, 'firstname' => $firstname, 'surname' => $surname, 'mobile' => $mobile, 'phone' => $phone, 'fax' => $fax, 'mail' => $mail, 'homepage' => $homepage, 'loginActive' => $loginActive, 'newsletter' => $newsletter, 'customerToken' => $customerToken, 'hash' => NULL));
+  $sql = "SELECT COUNT(*) AS FormCheck FROM customers WHERE `customerToken`='{$customerToken}'";
+  foreach ($pdo->query($sql) as $row) {
+     $FormCheck  = $row['FormCheck'];
+  }
+  if( $FormCheck < '1' ){
+    $statement = $pdo->prepare("INSERT INTO `customers`(`id`, `salutation_id`, `customerType_id`, `company`, `address`, `zip`, `location`, `country_code`, `firstname`, `surname`, `mobile`, `phone`, `fax`, `mail`, `homepage`, `loginActive`, `newsletter`, `customerToken`, `hash`)
+                                VALUES ( :customerID, :salutation_id, :customerType_id, :company, :address, :zip, :location, :country_code, :firstname, :surname, :mobile, :phone, :fax, :mail, :homepage, :loginActive, :newsletter, :customerToken, :hash)");
+    $statement->execute(array('customerID' => NULL, 'salutation_id' => $salutation, 'customerType_id' => $clientType, 'company' => $company, 'address' => $address, 'zip' => $zip, 'location' => $location, 'country_code' => $country, 'firstname' => $firstname, 'surname' => $surname, 'mobile' => $mobile, 'phone' => $phone, 'fax' => $fax, 'mail' => $mail, 'homepage' => $homepage, 'loginActive' => $loginActive, 'newsletter' => $newsletter, 'customerToken' => $customerToken, 'hash' => NULL));
 
-  if($customerToken != '0'){
-    header("Location: overviewCustomer.php?CustomerID=$customerToken");
+    if($customerToken != ""){
+      header("Location: overviewCustomer.php?CustomerID=$customerToken");
+      exit;
+    }
   }
 }
 ?>
