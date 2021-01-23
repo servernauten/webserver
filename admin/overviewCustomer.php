@@ -1,3 +1,30 @@
+<?php
+session_start();
+
+@include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
+// Datenbank Verbindung wird hergestellt
+$pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
+
+if( $_SESSION['AdminSessionTrue'] != '1' ){
+  header("Location: ../admin.php");
+  exit;
+}
+else{
+  if( $_SESSION['AdminSessionTrue'] == '1' ){
+
+    $sql = "SELECT * FROM admins
+            LEFT JOIN language ON admins.language_code = language.language_id
+            WHERE `id` = '{$_SESSION['admin_id']}'";
+
+    foreach ($pdo->query($sql) as $row) {
+       $adminFirstname  = $row['firstname'];
+       $adminSurname    = $row['surname'];
+       $adminLangCode   = $row['language_code'];
+
+    }
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,157 +53,37 @@
 
 
 <body id="app-container" class="menu-default show-spinner">
-  <nav class="navbar fixed-top">
-      <div class="d-flex align-items-center navbar-left">
-          <a href="#" class="menu-button d-none d-md-block">
-              <svg class="main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 17">
-                  <rect x="0.48" y="0.5" width="7" height="1" />
-                  <rect x="0.48" y="7.5" width="7" height="1" />
-                  <rect x="0.48" y="15.5" width="7" height="1" />
-              </svg>
-              <svg class="sub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 17">
-                  <rect x="1.56" y="0.5" width="16" height="1" />
-                  <rect x="1.56" y="7.5" width="16" height="1" />
-                  <rect x="1.56" y="15.5" width="16" height="1" />
-              </svg>
-          </a>
+  <?php include('tpl/nav.tpl.php'); ?>
+  <?php include('tpl/sidebar.tpl.php'); ?>
+  <?php
+  
+  $sql = "SELECT COUNT(*) AS overviewCustomerCheck FROM customers WHERE `customerToken`='{$_GET['CustomerID']}'";
+  foreach ($pdo->query($sql) as $row) {
+     $overviewCustomerCheck  = $row['overviewCustomerCheck'];
+  }
+  if( $overviewCustomerCheck == '1' ){
+    $sql = "SELECT customers.*, customerType.customerType_{$adminLangCode} AS customerTypeName, customerSalutation.salutation_{$adminLangCode} AS customerSalutation, countries.{$adminLangCode} AS customerCountries FROM customers LEFT JOIN customerType ON customers.customerType_id = customerType.customerType_id LEFT JOIN customerSalutation ON customers.salutation_id = customerSalutation.salutation_id LEFT JOIN countries ON customers.country_code = countries.code WHERE `customerToken` = '{$_GET['CustomerID']}'";
+    foreach ($pdo->query($sql) as $row) {
+      $ID                   = $row['id'];
+      $CustomerSalutation   = $row['customerSalutation'];
+      $CustomerTypeName     = $row['customerTypeName'];
+      $CustomerCompany      = $row['company'];
+      $CustomerAddress      = $row['address'];
+      $CustomerZip          = $row['zip'];
+      $CustomerLocation     = $row['location'];
+      $CustomerCountries    = $row['customerCountries'];
+      $CustomerFirstname    = $row['firstname'];
+      $CustomerSurname      = $row['surname'];
+      $CustomerMobile       = $row['mobile'];
+      $CustomerPhone        = $row['phone'];
+      $CustomerFax          = $row['fax'];
+      $CustomerEmail        = $row['mail'];
+      $CustomerHomepage     = $row['homepage'];
 
-          <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 17">
-                  <rect x="0.5" y="0.5" width="25" height="1" />
-                  <rect x="0.5" y="7.5" width="25" height="1" />
-                  <rect x="0.5" y="15.5" width="25" height="1" />
-              </svg>
-          </a>
-      </div>
 
-      <div class="navbar-right">
-          <div class="header-icons d-inline-block align-middle">
-
-              <div class="position-relative d-none d-sm-inline-block">
-                  <button class="header-icon btn btn-empty" type="button" id="iconMenuButton" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      <i class="simple-icon-grid"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right mt-3  position-absolute" id="iconMenuDropdown">
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-equalizer d-block"></i>
-                          <span>Settings</span>
-                      </a>
-
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-male-female d-block"></i>
-                          <span>Users</span>
-                      </a>
-
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-puzzle d-block"></i>
-                          <span>Components</span>
-                      </a>
-
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-bar-chart-4 d-block"></i>
-                          <span>Profits</span>
-                      </a>
-
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-file d-block"></i>
-                          <span>Surveys</span>
-                      </a>
-
-                      <a href="#" class="icon-menu-item">
-                          <i class="iconsminds-suitcase d-block"></i>
-                          <span>Tasks</span>
-                      </a>
-
-                  </div>
-              </div>
-
-              <div class="position-relative d-inline-block">
-                  <button class="header-icon btn btn-empty" type="button" id="notificationButton"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="simple-icon-bell"></i>
-                      <span class="count">3</span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right mt-3 position-absolute" id="notificationDropdown">
-                      <div class="scroll">
-                          <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                              <a href="#">
-                                  <img src="img/profiles/l-2.jpg" alt="Notification Image"
-                                      class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                              </a>
-                              <div class="pl-3">
-                                  <a href="#">
-                                      <p class="font-weight-medium mb-1">Joisse Kaycee just sent a new comment!</p>
-                                      <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                              <a href="#">
-                                  <img src="img/notifications/1.jpg" alt="Notification Image"
-                                      class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                              </a>
-                              <div class="pl-3">
-                                  <a href="#">
-                                      <p class="font-weight-medium mb-1">1 item is out of stock!</p>
-                                      <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                              <a href="#">
-                                  <img src="img/notifications/2.jpg" alt="Notification Image"
-                                      class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                              </a>
-                              <div class="pl-3">
-                                  <a href="#">
-                                      <p class="font-weight-medium mb-1">New order received! It is total $147,20.</p>
-                                      <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="d-flex flex-row mb-3 pb-3 ">
-                              <a href="#">
-                                  <img src="img/notifications/3.jpg" alt="Notification Image"
-                                      class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                              </a>
-                              <div class="pl-3">
-                                  <a href="#">
-                                      <p class="font-weight-medium mb-1">3 items just added to wish list by a user!
-                                      </p>
-                                      <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
-                  <i class="simple-icon-size-fullscreen"></i>
-                  <i class="simple-icon-size-actual"></i>
-              </button>
-
-          </div>
-
-          <div class="user d-inline-block">
-              <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">
-                  <span class="name"><?php echo ''.$adminFirstname.'&nbsp;'.$adminSurname.''; ?></span>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-right mt-3">
-                  <a class="dropdown-item" href="#">Account</a>
-                  <a class="dropdown-item" href="#">Features</a>
-                  <a class="dropdown-item" href="#">History</a>
-                  <a class="dropdown-item" href="#">Support</a>
-                  <a class="dropdown-item" href="#">Sign out</a>
-              </div>
-          </div>
-      </div>
-  </nav>
-    <?php include('tpl/sidebar.tpl.php'); ?>
+    }
+  }
+  ?>
     <main>
       <form method="POST" action="createCustomer.php">
         <div class="container-fluid ">
@@ -222,7 +129,7 @@
                                   <div class="mb-3">
                             <ul class="nav flex-column">
                                 <li class="nav-item ">
-                                    <a class="nav-link active iconsminds-file-edit" href="#"> Kunden bearbeiten</a>
+                                    <a class="nav-link active iconsminds-file-edit" href="editCustomer.php?CustomerID=<?php echo $_GET['CustomerID']; ?>"> Kunden bearbeiten</a>
                                 </li>
                             </ul>
                                   </div>
@@ -239,15 +146,15 @@
                                       <tbody>
                                           <tr>
                                               <th scope="row">Kundennummer:</th>
-                                              <td>KD1</td>
+                                              <td>KD<?php echo $ID; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Firma:</th>
-                                              <td>simplysoftware.de</td>
+                                              <td><?php echo $CustomerCompany; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Endkunde:</th>
-                                              <td colspan="2">Firmenkunde</td>
+                                              <td colspan="2"><?php echo $CustomerTypeName; ?></td>
                                           </tr>
                                       </tbody>
                                   </table>
@@ -261,15 +168,15 @@
                                       <tbody>
                                           <tr>
                                               <th scope="row">Adresse:</th>
-                                              <td>Kernerstraße 4</td>
+                                              <td><?php echo $CustomerAddress; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">PLZ / Ort:</th>
-                                              <td>97980 Bad Mergentheim</td>
+                                              <td><?php echo $CustomerZip; ?> <?php echo $CustomerLocation; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Land:</th>
-                                              <td colspan="2">Deutschland</td>
+                                              <td colspan="2"><?php echo $CustomerCountries; ?></td>
                                           </tr>
                                       </tbody>
                                   </table>
@@ -283,7 +190,7 @@
                                       <tbody>
                                           <tr>
                                               <th scope="row">Website:</th>
-                                              <td>simplysoftware.de</td>
+                                              <td><?php echo $CustomerHomepage; ?></td>
                                           </tr>
                                       </tbody>
                                   </table>
@@ -298,15 +205,15 @@
                                       <tbody>
                                           <tr>
                                               <th scope="row">Anrede:</th>
-                                              <td>Herr</td>
+                                              <td><?php echo $CustomerSalutation; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Nachname:</th>
-                                              <td>Wulf</td>
+                                              <td><?php echo $CustomerSurname; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Vorname:</th>
-                                              <td colspan="2">Sebastian</td>
+                                              <td colspan="2"><?php echo $CustomerFirstname; ?></td>
                                           </tr>
                                       </tbody>
                                   </table>
@@ -320,19 +227,19 @@
                                       <tbody>
                                           <tr>
                                               <th scope="row">Telefon:</th>
-                                              <td>03955555</td>
+                                              <td><?php echo $CustomerPhone; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Fax:</th>
-                                              <td>039544444</td>
+                                              <td><?php echo $CustomerFax; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">Mobil:</th>
-                                              <td colspan="2">015111111</td>
+                                              <td colspan="2"><?php echo $CustomerMobile; ?></td>
                                           </tr>
                                           <tr>
                                               <th scope="row">E-Mail:</th>
-                                              <td colspan="2">sebastian@aaa.de</td>
+                                              <td colspan="2"><?php echo $CustomerEmail; ?></td>
                                           </tr>
                                       </tbody>
                                   </table>
@@ -351,30 +258,7 @@
                   </form>
     </main>
 
-    <footer class="page-footer">
-        <div class="footer-content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <p class="mb-0 text-muted">ColoredStrategies 2019</p>
-                    </div>
-                    <div class="col-sm-6 d-none d-sm-block">
-                        <ul class="breadcrumb pt-0 pr-0 float-right">
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Review</a>
-                            </li>
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Purchase</a>
-                            </li>
-                            <li class="breadcrumb-item mb-0">
-                                <a href="#" class="btn-link">Docs</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include('tpl/footer.tpl.php'); ?>
 
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
