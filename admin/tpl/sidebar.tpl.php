@@ -13,6 +13,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#server">
+                        <i class="iconsminds-server-2"></i> Server
+                    </a>
+                </li>
+                <li>
                     <a href="#settings">
                         <i class="simple-icon-settings"></i> Settings
                     </a>
@@ -66,6 +71,51 @@
                         </ul>
                     </div>
                 </li>
+            </ul>
+            <ul class="list-unstyled" data-link="server" id="server">
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#collapseAuthorization" aria-expanded="true"
+                        aria-controls="collapseAuthorization" class="rotate-arrow-icon opacity-50">
+                        <i class="simple-icon-arrow-down"></i> <span class="d-inline-block">Server Config</span>
+                    </a>
+                    <div id="collapseAuthorization" class="collapse show">
+                        <ul class="list-unstyled inner-level-menu">
+                            <li>
+                                <a href="overviewMasterServers.php">
+                                    <i class="iconsminds-server-2"></i> <span
+                                        class="d-inline-block">Overview Master</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="createMasterServer.php">
+                                    <i class="iconsminds-server-2"></i> <span
+                                        class="d-inline-block">Create Master Server</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#collapseMisc" aria-expanded="true"
+                        aria-controls="collapseMisc" class="rotate-arrow-icon opacity-50">
+                        <i class="simple-icon-arrow-down"></i> <span class="d-inline-block">Customers News</span>
+                    </a>
+                    <div id="collapseMisc" class="collapse show">
+                        <ul class="list-unstyled inner-level-menu">
+                            <li>
+                                <a href="index.php?adminPage?=CustomerNews">
+                                    <i class="iconsminds-information"></i> <span class="d-inline-block">Customers News</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="index.php?adminPage?=CustomerNewsletter">
+                                    <i class="simple-icon-envelope-letter"></i> <span class="d-inline-block">Customers Newsletter</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
             </ul>
             <ul class="list-unstyled" data-link="settings" id="settings">
               <li>

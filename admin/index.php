@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 @include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
 // Datenbank Verbindung wird hergestellt
 $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
@@ -16,6 +20,13 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
       foreach ($pdo->query($sql) as $row) {
          $adminFirstname  = $row['firstname'];
          $adminSurname    = $row['surname'];
+
+         // Start API Licence
+         $servernautenUrl = 'http://localhost/servernauten_kundencenter/api.php?APIKEY='.$row['licencekey'].'';
+         $servernautAPI = file_get_contents($servernautenUrl);
+         $servernautAPI = json_decode($servernautAPI);
+         $timeStamp = time();
+         // End API Licence
 
       }
     }
@@ -49,167 +60,18 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <nav class="navbar fixed-top">
-        <div class="d-flex align-items-center navbar-left">
-            <a href="#" class="menu-button d-none d-md-block">
-                <svg class="main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 17">
-                    <rect x="0.48" y="0.5" width="7" height="1" />
-                    <rect x="0.48" y="7.5" width="7" height="1" />
-                    <rect x="0.48" y="15.5" width="7" height="1" />
-                </svg>
-                <svg class="sub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 17">
-                    <rect x="1.56" y="0.5" width="16" height="1" />
-                    <rect x="1.56" y="7.5" width="16" height="1" />
-                    <rect x="1.56" y="15.5" width="16" height="1" />
-                </svg>
-            </a>
-
-            <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 17">
-                    <rect x="0.5" y="0.5" width="25" height="1" />
-                    <rect x="0.5" y="7.5" width="25" height="1" />
-                    <rect x="0.5" y="15.5" width="25" height="1" />
-                </svg>
-            </a>
-        </div>
-
-        <div class="navbar-right">
-            <div class="header-icons d-inline-block align-middle">
-
-                <div class="position-relative d-none d-sm-inline-block">
-                    <button class="header-icon btn btn-empty" type="button" id="iconMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="simple-icon-grid"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right mt-3  position-absolute" id="iconMenuDropdown">
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-equalizer d-block"></i>
-                            <span>Settings</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-male-female d-block"></i>
-                            <span>Users</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-puzzle d-block"></i>
-                            <span>Components</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-bar-chart-4 d-block"></i>
-                            <span>Profits</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-file d-block"></i>
-                            <span>Surveys</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-suitcase d-block"></i>
-                            <span>Tasks</span>
-                        </a>
-
-                    </div>
-                </div>
-
-                <div class="position-relative d-inline-block">
-                    <button class="header-icon btn btn-empty" type="button" id="notificationButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="simple-icon-bell"></i>
-                        <span class="count">3</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right mt-3 position-absolute" id="notificationDropdown">
-                        <div class="scroll">
-                            <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                                <a href="#">
-                                    <img src="img/profiles/l-2.jpg" alt="Notification Image"
-                                        class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                                </a>
-                                <div class="pl-3">
-                                    <a href="#">
-                                        <p class="font-weight-medium mb-1">Joisse Kaycee just sent a new comment!</p>
-                                        <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                                <a href="#">
-                                    <img src="img/notifications/1.jpg" alt="Notification Image"
-                                        class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                                </a>
-                                <div class="pl-3">
-                                    <a href="#">
-                                        <p class="font-weight-medium mb-1">1 item is out of stock!</p>
-                                        <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                                <a href="#">
-                                    <img src="img/notifications/2.jpg" alt="Notification Image"
-                                        class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                                </a>
-                                <div class="pl-3">
-                                    <a href="#">
-                                        <p class="font-weight-medium mb-1">New order received! It is total $147,20.</p>
-                                        <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-row mb-3 pb-3 ">
-                                <a href="#">
-                                    <img src="img/notifications/3.jpg" alt="Notification Image"
-                                        class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                                </a>
-                                <div class="pl-3">
-                                    <a href="#">
-                                        <p class="font-weight-medium mb-1">3 items just added to wish list by a user!
-                                        </p>
-                                        <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
-                    <i class="simple-icon-size-fullscreen"></i>
-                    <i class="simple-icon-size-actual"></i>
-                </button>
-
-            </div>
-
-            <div class="user d-inline-block">
-                <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <span class="name"><?php echo ''.$adminFirstname.'&nbsp;'.$adminSurname.''; ?></span>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-right mt-3">
-                    <a class="dropdown-item" href="#">Account</a>
-                    <a class="dropdown-item" href="#">Features</a>
-                    <a class="dropdown-item" href="#">History</a>
-                    <a class="dropdown-item" href="#">Support</a>
-                    <a class="dropdown-item" href="#">Sign out</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <?php include('tpl/sidebar.tpl.php'); ?>
+  <?php include('tpl/nav.tpl.php'); ?>
+  <?php include('tpl/sidebar.tpl.php'); ?>
     <main>
         <div class="container-fluid">
+          <?php include('inc/licence/licenceCheck.inc.php'); ?>
+          <?php licenceCheck($servernautAPI,$timeStamp); ?>
             <div class="row">
                 <div class="col-12">
                     <h1>Dashboard</h1>
                     <div class="separator mb-5"></div>
                 </div>
-
             </div>
-
 
             <div class="row sortable">
                 <div class="col-xl-3 col-lg-6 mb-4">
@@ -219,65 +81,141 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                 <i class="simple-icon-shuffle"></i>
                             </div>
                         </div>
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">Master Server</h6>
-                            <div role="progressbar"
-                                class="progress-bar-circle progress-bar-banner position-relative"
-                                data-color="white" data-trail-color="rgba(255,255,255,0.2)"
-                                aria-valuenow="5" aria-valuemax="10" data-show-percent="false">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header p-0 position-relative">
-                            <div class="position-absolute handle card-icon">
-                                <i class="simple-icon-shuffle"></i>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">Kunden</h6>
-                            <div role="progressbar"
-                                class="progress-bar-circle progress-bar-banner position-relative"
-                                data-color="white" data-trail-color="rgba(255,255,255,0.2)"
-                                aria-valuenow="7" aria-valuemax="25" data-show-percent="false">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header p-0 position-relative">
-                            <div class="position-absolute handle card-icon">
-                                <i class="simple-icon-shuffle"></i>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">Gameserver</h6>
-                            <div role="progressbar"
-                                class="progress-bar-circle progress-bar-banner position-relative"
-                                data-color="white" data-trail-color="rgba(255,255,255,0.2)"
-                                aria-valuenow="7" aria-valuemax="10" data-show-percent="false">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header p-0 position-relative">
-                            <div class="position-absolute handle card-icon">
-                                <i class="simple-icon-shuffle"></i>
-                            </div>
-                        </div>
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">Webserver</h6>
-                              <div role="progressbar"
+                        <?php
+                        if( $servernautAPI->MasterServer == 'unlimited' ){
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Master Server</h6>';
+
+                              $sql = "SELECT COUNT(id) AS MasterServerCount FROM server_MasterServer";
+                              $MasterServer = $pdo->query($sql)->fetch();
+
+                              echo '<div role="progressbar"
+                                  class="position-relative"><h2><span class="badge badge-secondary">'.$MasterServer['MasterServerCount'].' / Unlimited</span></h2>
+                              </div>
+                          </div>';
+                        }else{
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Master Server</h6>';
+
+                              $sql = "SELECT COUNT(id) AS MasterServerCount FROM server_MasterServer";
+                              $MasterServer = $pdo->query($sql)->fetch();
+
+                              echo '<div role="progressbar"
                                   class="progress-bar-circle progress-bar-banner position-relative"
                                   data-color="white" data-trail-color="rgba(255,255,255,0.2)"
-                                  aria-valuenow="7" aria-valuemax="10" data-show-percent="false">
+                                  aria-valuenow="'.$MasterServer['MasterServerCount'].'" aria-valuemax="'.$servernautAPI->MasterServer.'" data-show-percent="false">
                               </div>
+                          </div>';
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <div class="position-absolute handle card-icon">
+                                <i class="simple-icon-shuffle"></i>
+                            </div>
                         </div>
+                        <?php
+                        if( $servernautAPI->Customer == 'unlimited' ){
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Kunden</h6>';
+
+                              $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                              $Customers = $pdo->query($sql)->fetch();
+
+                              echo '<div role="progressbar"
+                                  class="position-relative"><h2><span class="badge badge-secondary">'.$Customers['CustomersCount'].' / Unlimited</span></h2>
+                              </div>
+                          </div>';
+                        }else{
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Kunden</h6>';
+
+                                $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                                $Customers = $pdo->query($sql)->fetch();
+
+                              echo '<div role="progressbar"
+                                  class="progress-bar-circle progress-bar-banner position-relative"
+                                  data-color="white" data-trail-color="rgba(255,255,255,0.2)"
+                                  aria-valuenow="'.$Customers['CustomersCount'].'" aria-valuemax="'.$servernautAPI->Customer.'" data-show-percent="false">
+                              </div>
+                          </div>';
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <div class="position-absolute handle card-icon">
+                                <i class="simple-icon-shuffle"></i>
+                            </div>
+                        </div>
+                        <?php
+                        if( $servernautAPI->GameServer == 'unlimited' ){
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Gameserver</h6>';
+
+                            /*  $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                              $Customers = $pdo->query($sql)->fetch(); */
+
+                              echo '<div role="progressbar"
+                                  class="position-relative"><h2><span class="badge badge-secondary">2 / Unlimited</span></h2>
+                              </div>
+                          </div>';
+                        }else{
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Gameserver</h6>';
+
+                              /*  $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                                $Customers = $pdo->query($sql)->fetch(); */
+
+                              echo '<div role="progressbar"
+                                  class="progress-bar-circle progress-bar-banner position-relative"
+                                  data-color="white" data-trail-color="rgba(255,255,255,0.2)"
+                                  aria-valuenow="2" aria-valuemax="'.$servernautAPI->GameServer.'" data-show-percent="false">
+                              </div>
+                          </div>';
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <div class="position-absolute handle card-icon">
+                                <i class="simple-icon-shuffle"></i>
+                            </div>
+                        </div>
+                        <?php
+                        if( $servernautAPI->WebServer == 'unlimited' ){
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Webserver</h6>';
+
+                            /*  $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                              $Customers = $pdo->query($sql)->fetch(); */
+
+                              echo '<div role="progressbar"
+                                  class="position-relative"><h2><span class="badge badge-secondary">2 / Unlimited</span></h2>
+                              </div>
+                          </div>';
+                        }else{
+                          echo '<div class="card-body d-flex justify-content-between align-items-center">
+                              <h6 class="mb-0">Webserver</h6>';
+
+                              /*  $sql = "SELECT COUNT(id) AS CustomersCount FROM customers";
+                                $Customers = $pdo->query($sql)->fetch(); */
+
+                              echo '<div role="progressbar"
+                                  class="progress-bar-circle progress-bar-banner position-relative"
+                                  data-color="white" data-trail-color="rgba(255,255,255,0.2)"
+                                  aria-valuenow="2" aria-valuemax="'.$servernautAPI->WebServer.'" data-show-percent="false">
+                              </div>
+                          </div>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

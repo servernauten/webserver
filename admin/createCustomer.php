@@ -17,11 +17,18 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          $adminFirstname  = $row['firstname'];
          $adminSurname    = $row['surname'];
 
+         // Start API Licence
+         $servernautenUrl = 'http://localhost/servernauten_kundencenter/api.php?APIKEY='.$row['licencekey'].'';
+         $servernautAPI = file_get_contents($servernautenUrl);
+         $servernautAPI = json_decode($servernautAPI);
+         $timeStamp = time();
+         // End API Licence
+
       }
-      if (!empty($_POST['submitCreateCustomer']) ){
+      if (!empty($_POST['submitCreateCustomer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
         $createCustomer = '1';
-        include('../inc/inputCheck/inputCheck.inc.php');
-        include('inc/createCustomer/createCustomer.inc.php');
+        @include('../inc/inputCheck/inputCheck.inc.php');
+        @include('inc/createCustomer/createCustomer.inc.php');
       }
     }
   }
@@ -60,6 +67,8 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
     <main>
       <form method="POST" action="createCustomer.php">
         <div class="container-fluid ">
+          <?php include('inc/licence/licenceCheck.inc.php'); ?>
+          <?php echo licenceCheck($servernautAPI,$timeStamp); ?>
           <div class="row">
               <div class="col-12">
 
@@ -230,7 +239,21 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                       <input name="homepage" type="text" class="form-control"
                                           aria-describedby="basic-addon1">
                                   </div>
-                                  <input name="submitCreateCustomer" type="submit" class="btn btn-primary d-block mt-3" value="Create Customer"></input>
+                                  <?php
+                                  $statement = $pdo->prepare("SELECT COUNT(*) AS customersQuantity FROM customers");
+                                  $statement->execute();
+                                  $row = $statement->fetch();
+                                  if( $row['customersQuantity'] <= $servernautAPI->Customer OR $row['customersQuantity'] == 'unlimited' ){
+                                    echo '<input name="submitCreateCustomer" type="submit" class="btn btn-primary d-block mt-3" value="Create Customer"></input>';
+                                  }else {
+                                    echo '<div class="alert alert-danger" role="alert">
+                                            Sie haben die maximale Kundenzahl von '.$servernautAPI->Customer.' erreicht.
+                                    </div>';
+
+                                  }
+                                  ?>
+
+
                                   <!-- End Homepage -->
                               </div>
                           </div>

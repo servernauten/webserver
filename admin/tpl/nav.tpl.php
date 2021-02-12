@@ -143,7 +143,7 @@
                 <a class="dropdown-item" href="#">Features</a>
                 <a class="dropdown-item" href="#">History</a>
                 <a class="dropdown-item" href="#">Support</a>
-                <a class="dropdown-item" href="inc/logout/logout.inc.php">Logout</a>
+                <a class="dropdown-item" href="../admin.php">Logout</a>
             </div>
         </div>
     </div>
