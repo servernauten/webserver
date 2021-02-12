@@ -21,6 +21,13 @@ else{
        $adminSurname    = $row['surname'];
        $adminLangCode   = $row['language_code'];
 
+       // Start API Licence
+       $servernautenUrl = 'https://www.servernauten.de/API/licenceData.php?APIKEY='.$row['licencekey'].'';
+       $servernautAPI = file_get_contents($servernautenUrl);
+       $servernautAPI = json_decode($servernautAPI);
+       $timeStamp = time();
+       // End API Licence
+
     }
   }
 }
@@ -56,7 +63,7 @@ else{
   <?php include('tpl/nav.tpl.php'); ?>
   <?php include('tpl/sidebar.tpl.php'); ?>
   <?php
-  
+
   $sql = "SELECT COUNT(*) AS overviewCustomerCheck FROM customers WHERE `customerToken`='{$_GET['CustomerID']}'";
   foreach ($pdo->query($sql) as $row) {
      $overviewCustomerCheck  = $row['overviewCustomerCheck'];

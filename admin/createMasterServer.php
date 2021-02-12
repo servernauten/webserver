@@ -20,7 +20,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          $adminSurname    = $row['surname'];
 
          // Start API Licence
-         $servernautenUrl = 'http://localhost/servernauten_kundencenter/api.php?APIKEY='.$row['licencekey'].'';
+         $servernautenUrl = 'https://www.servernauten.de/API/licenceData.php?APIKEY='.$row['licencekey'].'';
          $servernautAPI = file_get_contents($servernautenUrl);
          $servernautAPI = json_decode($servernautAPI);
          $timeStamp = time();

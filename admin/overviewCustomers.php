@@ -21,6 +21,13 @@ else{
        $adminSurname    = $row['surname'];
        $adminLangCode   = $row['language_code'];
 
+       // Start API Licence
+       $servernautenUrl = 'https://www.servernauten.de/API/licenceData.php?APIKEY='.$row['licencekey'].'';
+       $servernautAPI = file_get_contents($servernautenUrl);
+       $servernautAPI = json_decode($servernautAPI);
+       $timeStamp = time();
+       // End API Licence
+
     }
   }
 }
