@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 @include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
 // Datenbank Verbindung wird hergestellt
 $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
@@ -13,6 +17,8 @@ else{
   if( $_SESSION['AdminSessionTrue'] == '1' ){
 
     @include('inc/serverPing/serverPing.inc.php');
+    @include('inc/serverCommands/serverCommands.inc.php');
+    @include('inc/opensslGetCipherMethods/opensslGetCipherMethods.inc.php');
 
     $sql = "SELECT * FROM admins
             LEFT JOIN language ON admins.language_code = language.language_id
@@ -71,12 +77,42 @@ else{
                     <div class="card">
                         <div class="card-body">
                           <?php
+
+                          if (!empty($_POST['RebootMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
+
+                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
+                              $RebootMasterServer = $pdo->query($sql)->fetch();
+
+                              $decrypted_password = encrypt_decrypt('decrypt', $RebootMasterServer['ssh2Password']);
+
+                              $server = serverCommands($_POST['ssh2IP'],$RebootMasterServer['ssh2Username'],$decrypted_password,$RebootMasterServer['ssh2Port'],'init 6');
+
+                          }
+                          else{
+                            echo 'Server offline';
+                          }
+                          if (!empty($_POST['ShutdownMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
+                            echo 'hier';
+                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
+                              $ShutdownMasterServer = $pdo->query($sql)->fetch();
+
+                              $decrypted_password = encrypt_decrypt('decrypt', $ShutdownMasterServer['ssh2Password']);
+
+                              $server = serverCommands($_POST['ssh2IP'],$ShutdownMasterServer['ssh2Username'],$decrypted_password,$ShutdownMasterServer['ssh2Port'],'init 0');
+
+                          }
+                          else{
+                            echo 'Server offline';
+                          }
                           if(!empty($_POST['RebootMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                               echo '<div class="alert alert-warning" role="alert">
                                         <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' neugestartet werden?</p>
                                         <div class="mb-4">
-                                        <input type="submit" name="RebootMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
-                                        <input type="submit" name="RebootMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                        <form method="POST" action="overviewMasterServers.php">
+                                          <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
+                                          <input type="submit" name="RebootMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                          <input type="submit" name="RebootMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                        </form>
                                         </div>
                                     </div>';
                           }
@@ -84,8 +120,11 @@ else{
                             echo '<div class="alert alert-warning" role="alert">
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' runtergefahren werden?</p>
                                       <div class="mb-4">
-                                      <input type="submit" name="ShutdownMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
-                                      <input type="submit" name="ShutdownMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      <form method="POST" action="overviewMasterServers.php">
+                                        <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
+                                        <input type="submit" name="ShutdownMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                        <input type="submit" name="ShutdownMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      </form>
                                       </div>
                                   </div>';
                           }

@@ -1,50 +1,44 @@
 <?php
+/**
+ * simple method to encrypt or decrypt a plain text string
+ * initialization vector(IV) has to be the same when encrypting and decrypting
+ *
+ * @param string $action: can be 'encrypt' or 'decrypt'
+ * @param string $string: string to encrypt or decrypt
+ *
+ * @return string
+ */
+function encrypt_decrypt($action, $string) {
+    $output = false;
 
-function passwordHash($password,$cipher,$salt){
-  if (in_array($cipher, openssl_get_cipher_methods()))
-  {
-      $ivlen = openssl_cipher_iv_length($cipher);
-      $iv = openssl_random_pseudo_bytes($ivlen);
+    $encrypt_method = "AES-256-CBC";
+    $secret_key = 'ServernautenIQ29§4dky!!lso()sYQ';
+    $secret_iv = 'Servernauten8uOJKXusjdkqowjxx!%';
 
-      // Hash aus DB
-      $hashPassword = openssl_encrypt($password, $cipher, $salt, $options=0, $iv, $tag);
-      //store $cipher, $iv, and $tag for decryption later
-      $original_password = openssl_decrypt($hashPassword, $cipher, $salt, $options=0, $iv, $tag);
+    // hash
+    $key = hash('sha256', $secret_key);
 
+    // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+    $iv = substr(hash('sha256', $secret_iv), 0, 16);
 
+    if ( $action == 'encrypt' ) {
+        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+        $output = base64_encode($output);
+    } else if( $action == 'decrypt' ) {
+        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+    }
 
-  }
-  return $hashPassword;
+    return $output;
 }
+// Passwort in Klartext
+//$plain_txt = "anika1983";
 
-function passwordPlain($password,$cipher,$salt){
-  if (in_array($cipher, openssl_get_cipher_methods()))
-  {
-      $ivlen = openssl_cipher_iv_length($cipher);
-      $iv = openssl_random_pseudo_bytes($ivlen);
-
-      // Hash aus DB
-      $hashPassword = openssl_encrypt($password, $cipher, $salt, $options=0, $iv, $tag);
-      //store $cipher, $iv, and $tag for decryption later
-      $original_password = openssl_decrypt($hashPassword, $cipher, $salt, $options=0, $iv, $tag);
+// Passwort verschlüsselt
+//$encrypted_txt = encrypt_decrypt('encrypt', $plain_txt);
+//$encrypted_txt = 'anFDTHE5YmE4RCtxTmhrbVVWVkdOdz09';
+// Passwort entschlüsselt und wieder in Klartext
+//$decrypted_txt = encrypt_decrypt('decrypt', $encrypted_txt);
 
 
-
-  }
-  return $original_password;
-}
-
-// passwordHash('anika1dsffgdfgdfg983','aes-128-gcm','ServernautenIQ29§4dky!!lso()sYQ');
-// passwordPlain('anika1dsffgdfgdfg983','aes-128-gcm','ServernautenIQ29§4dky!!lso()sYQ');
-
-/* $connection = ssh2_connect('192.168.2.128', 22);
-
-if (ssh2_auth_password($connection, 'sebastian', $original_password)) {
-  echo "Authentication Successful!\n";
-} else {
-  die('Authentication Failed...');
-} */
-
-//$key should have been previously generated in a cryptographically safe way, like openssl_random_pseudo_bytes
 
 ?>

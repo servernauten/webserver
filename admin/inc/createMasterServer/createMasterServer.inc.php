@@ -11,7 +11,7 @@ if( $createMasterServer == '1' ){
   if($ssh2Port == ""){$ssh2Port = '22';}
   $ssh2Username               = inputCheck($_POST['ssh2Username']);
   $ssh2Password               = inputCheck($_POST['ssh2Password']);
-  $ssh2Password               = passwordHash($ssh2Password,'aes-128-gcm','ServernautenIQ29§4dky!!lso()sYQ');
+  $ssh2Password               = encrypt_decrypt('encrypt', $ssh2Password);
   $operatingSystem            = inputCheck($_POST['operatingSystem']);
   $core                       = inputCheck($_POST['core']);
   $ram                        = inputCheck($_POST['ram']);
