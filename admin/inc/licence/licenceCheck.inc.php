@@ -1,4 +1,6 @@
 <?php
+
+// ENDE Adresse zur API Abfrage
   function licenceCheck($servernautAPI,$timeStamp){
 
 
