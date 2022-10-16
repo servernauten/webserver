@@ -2,6 +2,7 @@
 session_start();
 
 @include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
+@include('inc/licence/licenceCheck.inc.php');
 // Datenbank Verbindung wird hergestellt
 $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
 
@@ -18,7 +19,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          $adminSurname    = $row['surname'];
 
          // Start API Licence
-         $servernautenUrl = 'https://www.servernauten.de/API/licenceData.php?APIKEY='.$row['licencekey'].'';
+         $servernautenUrl = $servernautenUrl . $row['licencekey'];
          $servernautAPI = file_get_contents($servernautenUrl);
          $servernautAPI = json_decode($servernautAPI);
          $timeStamp = time();
@@ -67,7 +68,6 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
     <main>
       <form method="POST" action="createCustomer.php">
         <div class="container-fluid ">
-          <?php include('inc/licence/licenceCheck.inc.php'); ?>
           <?php echo licenceCheck($servernautAPI,$timeStamp); ?>
           <div class="row">
               <div class="col-12">

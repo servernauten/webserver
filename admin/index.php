@@ -6,6 +6,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 @include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
+@include('inc/licence/licenceCheck.inc.php');
+
 // Datenbank Verbindung wird hergestellt
 $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
 
@@ -22,6 +24,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          $adminSurname    = $row['surname'];
 
          // Start API Licence
+         $servernautenUrl = $servernautenUrl . $row['licencekey'];
          $servernautAPI = file_get_contents($servernautenUrl);
          $servernautAPI = json_decode($servernautAPI);
          $timeStamp = time();
@@ -63,7 +66,6 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
   <?php include('tpl/sidebar.tpl.php'); ?>
     <main>
         <div class="container-fluid">
-          <?php include('inc/licence/licenceCheck.inc.php'); ?>
           <?php licenceCheck($servernautAPI,$timeStamp); ?>
             <div class="row">
                 <div class="col-12">
@@ -81,7 +83,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                             </div>
                         </div>
                         <?php
-                        if( $servernautAPI->MasterServer == 'unlimited' ){
+                        if( $servernautAPI->MasterServer == '0' ){
                           echo '<div class="card-body d-flex justify-content-between align-items-center">
                               <h6 class="mb-0">Master Server</h6>';
 
@@ -117,7 +119,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                             </div>
                         </div>
                         <?php
-                        if( $servernautAPI->Customer == 'unlimited' ){
+                        if( $servernautAPI->Customer == '0' ){
                           echo '<div class="card-body d-flex justify-content-between align-items-center">
                               <h6 class="mb-0">Kunden</h6>';
 
@@ -153,7 +155,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                             </div>
                         </div>
                         <?php
-                        if( $servernautAPI->GameServer == 'unlimited' ){
+                        if( $servernautAPI->GameServer == '0' ){
                           echo '<div class="card-body d-flex justify-content-between align-items-center">
                               <h6 class="mb-0">Gameserver</h6>';
 
@@ -189,7 +191,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                             </div>
                         </div>
                         <?php
-                        if( $servernautAPI->WebServer == 'unlimited' ){
+                        if( $servernautAPI->WebServer == '0' ){
                           echo '<div class="card-body d-flex justify-content-between align-items-center">
                               <h6 class="mb-0">Webserver</h6>';
 

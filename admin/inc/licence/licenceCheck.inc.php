@@ -18,4 +18,5 @@
           }
   }
 
+$servernautenUrl = 'http://localhost/API/licenceData.php?APIKEY=';
 ?>

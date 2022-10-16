@@ -1,9 +1,6 @@
 <?php
 $host      = 'localhost';
-$dbname    = 'servernauten_webinterface';
+$dbname    = 'Webinterface';
 $dbuser    = 'root';
 $password  = '';
-
-// Licence Server
-$servernautenUrl = 'http://localhost/API/licenceData.php?APIKEY='.$row['licencekey'].'';
 ?>
