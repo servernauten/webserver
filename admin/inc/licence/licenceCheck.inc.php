@@ -18,5 +18,5 @@
           }
   }
 
-$servernautenUrl = 'http://localhost/API/licenceData.php?APIKEY=';
+$servernautenUrl = 'http://localhost/api.servernauten.de/API/licenceData.php?APIKEY=';
 ?>

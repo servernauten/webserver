@@ -145,7 +145,7 @@ else{
                             <table class="data-table data-table-feature">
                                 <thead>
                                     <tr>
-                                        <th>SSH2 IP</th>
+                                        <th>IP</th>
                                         <th>Active</th>
                                         <th>Description</th>
                                         <th>Server installed</th>

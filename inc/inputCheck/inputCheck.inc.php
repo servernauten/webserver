@@ -1,4 +1,5 @@
 <?php
+// Filter Fehler und Scripte aus dem Formular
 function inputCheck($varPOSTGET){
 
   $varInput  =   '0'; // Löscht die Variable $varInput und setzt sie auf 0

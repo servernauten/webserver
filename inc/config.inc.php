@@ -1,6 +1,6 @@
 <?php
 $host      = 'localhost';
-$dbname    = 'Webinterface';
-$dbuser    = 'root';
-$password  = '';
+$dbname    = 'servernauten_webinterface';
+$dbuser    = 'sebastian';
+$password  = '.Anika.1983.';
 ?>
