@@ -220,6 +220,169 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-6 mb-5">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-4">Übersicht Masterserver</h5>
+                            <form class="needs-validation tooltip-label-right" novalidate>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" required>
+                                    <div class="invalid-tooltip">
+                                        Name is required!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Age</label>
+                                    <input type="number" class="form-control" required>
+                                    <div class="invalid-tooltip">
+                                        Age is required!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Details</label>
+                                    <textarea class="form-control" rows="2" required></textarea>
+                                    <div class="invalid-tooltip">
+                                        Details are required!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label>Radio</label>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio1" name="customRadio"
+                                            class="custom-control-input" required>
+                                        <label class="custom-control-label" for="customRadio1">Toggle this custom
+                                            radio</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio2" name="customRadio"
+                                            class="custom-control-input" required>
+                                        <label class="custom-control-label" for="customRadio2">Or toggle this other
+                                            custom radio</label>
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                        Radio is required!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label>Check</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="jQueryCheckbox" required>
+                                        <label class="custom-control-label" for="customCheck1">Check first</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2"
+                                            name="jQueryCheckbox" required>
+                                        <label class="custom-control-label" for="customCheck2">Check second</label>
+                                    </div>
+                                    <div class="invalid-tooltip">
+                                        Checkboxes are required!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>State</label>
+                                    <select class="custom-select" required>
+                                        <option value=""></option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                    <div class="invalid-tooltip">
+                                        State is required!
+                                    </div>
+                                </div>
+                                <div class="custom-control custom-checkbox mb-3 error-l-200">
+                                    <input type="checkbox" class="custom-control-input" id="customControlValidation1"
+                                        required>
+                                    <label class="custom-control-label" for="customControlValidation1">Check this custom
+                                        checkbox</label>
+                                    <div class="invalid-tooltip">Check this!</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mb-0">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-4">Übersicht Rechnungen</h5>
+                            <form id="exampleForm" class="tooltip-label-right" novalidate>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" name="jQueryName" required>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Age</label>
+                                    <input type="number" class="form-control" required name="jQueryAge">
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Details</label>
+                                    <textarea class="form-control" rows="2" name="jQueryDetail" required></textarea>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label>Radio</label>
+                                    <div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="jQueryCustomRadio1" name="jQueryCustomRadio"
+                                                class="custom-control-input" required>
+                                            <label class="custom-control-label" for="jQueryCustomRadio1">Toggle this
+                                                custom
+                                                radio</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="jQueryCustomRadio2" name="jQueryCustomRadio"
+                                                class="custom-control-input" required>
+                                            <label class="custom-control-label" for="jQueryCustomRadio2">Or toggle this
+                                                other
+                                                custom
+                                                radio</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label>Check</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="jQueryCustomCheck1"
+                                            name="jQueryCheckbox" required>
+                                        <label class="custom-control-label" for="jQueryCustomCheck1">Check first</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="jQueryCustomCheck2"
+                                            name="jQueryCheckbox" required>
+                                        <label class="custom-control-label" for="jQueryCustomCheck2">Check
+                                            second</label>
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>State</label>
+                                    <select class="custom-select" required>
+                                        <option value=""></option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                                <div class="form-group position-relative error-l-200">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="jQueryControlValidation"
+                                            name="jQueryControlValidation" required>
+                                        <label class="custom-control-label" for="jQueryControlValidation">Check this
+                                            custom
+                                            checkbox</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mb-0">Submit</button>
+                            </form>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            
         </div>
     </main>
 
