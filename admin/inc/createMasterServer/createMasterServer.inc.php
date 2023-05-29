@@ -31,7 +31,7 @@ if( $createMasterServer == '1' ){
     $statement->execute(array('id' => NULL, 'anyIdentifier' => $anyIdentifier, 'reseller' => $reseller, 'serverActive' => $serverActive, 'ssh2IP' => $ssh2IP, 'ftpPort' => $ftpPort, 'ssh2Port' => $ssh2Port, 'ssh2Username' => $ssh2Username, 'ssh2Password' => $ssh2Password, 'operatingSystem' => $operatingSystem, 'core' => $core, 'ram' => $ram, 'description' => $description, 'maximumSlots' => $maximumSlots, 'maximumServer' => $maximumServer, 'MasterServerToken' => $MasterServerToken));
 
     if($MasterServerToken != ""){
-      header("Location: overviewMasterServer.php?MasterServerID=$MasterServerToken");
+      header("Location: overviewMasterServers.php?MasterServerID=$MasterServerToken");
       exit;
     }
   }

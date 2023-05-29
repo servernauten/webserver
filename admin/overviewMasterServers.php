@@ -167,7 +167,8 @@ else{
                      <form method="POST" action="overviewMasterServers.php">
                      <input type="hidden" name="serverID" value="'.$row['id'].'">
                      <input type="hidden" name="ssh2IP" value="'.$row['ssh2IP'].'">
-                     <input type="submit" name="PingMasterServer" class="btn btn-primary btn-xs mb-1" value="Server Ping"></input>
+                     <input type="submit" name="PingMasterServer" class="btn btn-info btn-xs mb-1" value="Server Ping"></input>
+                     <input type="submit" name="EditMasterServer" class="btn btn-success btn-xs mb-1" value="Edit"></input>
                      <input type="submit" name="RebootMasterServer" class="btn btn-primary btn-xs mb-1" value="Reboot"></input>
                      <input type="submit" name="ShutdownMasterServer" class="btn btn-warning btn-xs mb-1" value="Shutdown"></input>
                      <input type="submit" name="DeleteMasterServer" class="btn btn-danger btn-xs mb-1" value="Delete"></input>
