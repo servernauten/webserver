@@ -77,7 +77,7 @@ else{
                     <div class="card">
                         <div class="card-body">
                           <?php
-
+                          // BEGIN Server neustarten
                           if (!empty($_POST['RebootMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
 
                               $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
@@ -88,11 +88,10 @@ else{
                               $server = serverCommands($_POST['ssh2IP'],$RebootMasterServer['ssh2Username'],$decrypted_password,$RebootMasterServer['ssh2Port'],'init 6');
 
                           }
-                          else{
-                            echo 'Server offline';
-                          }
+                          // ENDE Server neustarten
+                          // BEGIN Server runterfahren
                           if (!empty($_POST['ShutdownMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
-                            echo 'hier';
+              
                               $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
                               $ShutdownMasterServer = $pdo->query($sql)->fetch();
 
@@ -101,9 +100,14 @@ else{
                               $server = serverCommands($_POST['ssh2IP'],$ShutdownMasterServer['ssh2Username'],$decrypted_password,$ShutdownMasterServer['ssh2Port'],'init 0');
 
                           }
-                          else{
-                            echo 'Server offline';
-                          }
+                          // ENDE Server runtefahren
+                          // BEGIN Server löschen
+                          //
+                          //
+                          //
+                          //
+                          // ENDE Server löschen
+                          // BEGIN Abfrage ob Server neugestartet werden soll
                           if(!empty($_POST['RebootMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                               echo '<div class="alert alert-warning" role="alert">
                                         <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' neugestartet werden?</p>
@@ -116,6 +120,8 @@ else{
                                         </div>
                                     </div>';
                           }
+                          // ENDE Abfrage ob Server neugestartet werden soll
+                          // BEGIN Abfrage ob Server runtergefahren werden soll
                           if(!empty($_POST['ShutdownMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                             echo '<div class="alert alert-warning" role="alert">
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' runtergefahren werden?</p>
@@ -128,6 +134,8 @@ else{
                                       </div>
                                   </div>';
                           }
+                          // ENDE Abfrage ob Server runtergefahren werden soll
+                          // BEGIN Abfrage ob Server gelöscht werden soll
                           if(!empty($_POST['DeleteMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                             echo '<div class="alert alert-warning" role="alert">
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' gelöscht werden?</p>
@@ -137,9 +145,12 @@ else{
                                       </div>
                                   </div>';
                           }
+                          // ENDE Abfrage ob Server gelöscht werden soll
+                          // BEGIN Ausgabe Server Ping
                           if(!empty($_POST['PingMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                             echo serverPing($_POST['ssh2IP']);
                           }
+                          // ENDE Ausgabe Server Ping
                           ?>
 
                             <table class="data-table data-table-feature">
