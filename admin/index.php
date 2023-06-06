@@ -226,83 +226,129 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="mb-4">Übersicht Masterserver</h5>
-                            <form class="needs-validation tooltip-label-right" novalidate>
-                                <div class="form-group position-relative error-l-50">
-                                    <label>Name</label>
-                                    <input type="text" class="form-control" required>
-                                    <div class="invalid-tooltip">
-                                        Name is required!
-                                    </div>
-                                </div>
-                                <div class="form-group position-relative error-l-50">
-                                    <label>Age</label>
-                                    <input type="number" class="form-control" required>
-                                    <div class="invalid-tooltip">
-                                        Age is required!
-                                    </div>
-                                </div>
-                                <div class="form-group position-relative error-l-50">
-                                    <label>Details</label>
-                                    <textarea class="form-control" rows="2" required></textarea>
-                                    <div class="invalid-tooltip">
-                                        Details are required!
-                                    </div>
-                                </div>
-                                <div class="form-group position-relative">
-                                    <label>Radio</label>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="customRadio1" name="customRadio"
-                                            class="custom-control-input" required>
-                                        <label class="custom-control-label" for="customRadio1">Toggle this custom
-                                            radio</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="customRadio2" name="customRadio"
-                                            class="custom-control-input" required>
-                                        <label class="custom-control-label" for="customRadio2">Or toggle this other
-                                            custom radio</label>
-                                    </div>
-                                    <div class="invalid-tooltip">
-                                        Radio is required!
-                                    </div>
-                                </div>
-                                <div class="form-group position-relative">
-                                    <label>Check</label>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="jQueryCheckbox" required>
-                                        <label class="custom-control-label" for="customCheck1">Check first</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck2"
-                                            name="jQueryCheckbox" required>
-                                        <label class="custom-control-label" for="customCheck2">Check second</label>
-                                    </div>
-                                    <div class="invalid-tooltip">
-                                        Checkboxes are required!
-                                    </div>
-                                </div>
-                                <div class="form-group position-relative error-l-50">
-                                    <label>State</label>
-                                    <select class="custom-select" required>
-                                        <option value=""></option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                    <div class="invalid-tooltip">
-                                        State is required!
-                                    </div>
-                                </div>
-                                <div class="custom-control custom-checkbox mb-3 error-l-200">
-                                    <input type="checkbox" class="custom-control-input" id="customControlValidation1"
-                                        required>
-                                    <label class="custom-control-label" for="customControlValidation1">Check this custom
-                                        checkbox</label>
-                                    <div class="invalid-tooltip">Check this!</div>
-                                </div>
-                                <button type="submit" class="btn btn-primary mb-0">Submit</button>
-                            </form>
+                            <div class="container-fluid">
+
+            <div class="row mb-4">
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <?php
+                          // BEGIN Server neustarten
+                          if (!empty($_POST['RebootMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
+
+                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
+                              $RebootMasterServer = $pdo->query($sql)->fetch();
+
+                              $decrypted_password = encrypt_decrypt('decrypt', $RebootMasterServer['ssh2Password']);
+
+                              $server = serverCommands($_POST['ssh2IP'],$RebootMasterServer['ssh2Username'],$decrypted_password,$RebootMasterServer['ssh2Port'],'init 6');
+
+                          }
+                          // ENDE Server neustarten
+                          // BEGIN Server runterfahren
+                          if (!empty($_POST['ShutdownMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
+              
+                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
+                              $ShutdownMasterServer = $pdo->query($sql)->fetch();
+
+                              $decrypted_password = encrypt_decrypt('decrypt', $ShutdownMasterServer['ssh2Password']);
+
+                              $server = serverCommands($_POST['ssh2IP'],$ShutdownMasterServer['ssh2Username'],$decrypted_password,$ShutdownMasterServer['ssh2Port'],'init 0');
+
+                          }
+                          // ENDE Server runtefahren
+                          // BEGIN Server löschen
+                          //
+                          //
+                          //
+                          //
+                          // ENDE Server löschen
+                          // BEGIN Abfrage ob Server neugestartet werden soll
+                          if(!empty($_POST['RebootMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                              echo '<div class="alert alert-warning" role="alert">
+                                        <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' neugestartet werden?</p>
+                                        <div class="mb-4">
+                                        <form method="POST" action="overviewMasterServers.php">
+                                          <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
+                                          <input type="submit" name="RebootMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                          <input type="submit" name="RebootMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                        </form>
+                                        </div>
+                                    </div>';
+                          }
+                          // ENDE Abfrage ob Server neugestartet werden soll
+                          // BEGIN Abfrage ob Server runtergefahren werden soll
+                          if(!empty($_POST['ShutdownMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                            echo '<div class="alert alert-warning" role="alert">
+                                      <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' runtergefahren werden?</p>
+                                      <div class="mb-4">
+                                      <form method="POST" action="overviewMasterServers.php">
+                                        <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
+                                        <input type="submit" name="ShutdownMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                        <input type="submit" name="ShutdownMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      </form>
+                                      </div>
+                                  </div>';
+                          }
+                          // ENDE Abfrage ob Server runtergefahren werden soll
+                          // BEGIN Abfrage ob Server gelöscht werden soll
+                          if(!empty($_POST['DeleteMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                            echo '<div class="alert alert-warning" role="alert">
+                                      <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' gelöscht werden?</p>
+                                      <div class="mb-4">
+                                      <input type="submit" name="DeleteMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                      <input type="submit" name="DeleteMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      </div>
+                                  </div>';
+                          }
+                          // ENDE Abfrage ob Server gelöscht werden soll
+                          // BEGIN Ausgabe Server Ping
+                          if(!empty($_POST['PingMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                            echo serverPing($_POST['ssh2IP']);
+                          }
+                          // ENDE Ausgabe Server Ping
+                          ?>
+
+                            <table class="data-table data-table-feature">
+                                <thead>
+                                    <tr>
+                                        <th>IP</th>
+                                        <th>Active</th>
+                                        <th>Description</th>
+                                        <th>Server installed</th>
+                                        <th>Ram</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+      <?php
+      $statement = $pdo->query("SELECT `id`,`ssh2IP`,`serverActive`,`description`,`maximumServer`,`ram`,`MasterServerToken` FROM `server_MasterServer`");
+      while($row = $statement->fetch()) {
+         echo '<tr>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['ssh2IP'].'</a></td>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['serverActive'].'</td>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['description'].'</a></td>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">0 / '.$row['maximumServer'].'</a></td>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['ram'].'</a></td>
+                 <td><div class="mb-4">
+                     <form method="POST" action="overviewMasterServers.php">
+                     <input type="hidden" name="serverID" value="'.$row['id'].'">
+                     <input type="hidden" name="ssh2IP" value="'.$row['ssh2IP'].'">
+                     <input type="submit" name="PingMasterServer" class="btn btn-success btn-xs mb-1" value="Server Online"></input>
+                     <input type="submit" name="EditMasterServer" class="btn btn-danger btn-xs mb-1" value="Server Offline"></input>
+                     </form>
+                 </div></td>
+              </tr>';
+}
+      ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
                         </div>
                     </div>
                 </div>
