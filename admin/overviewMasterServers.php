@@ -107,6 +107,18 @@ else{
                           //
                           //
                           // ENDE Server löschen
+
+                          // BEGIN Abfrage ob Server bearbeitet werden soll
+                          if(!empty($_POST['EditMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                            echo '<div class="alert alert-warning" role="alert">
+                                      <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' bearbeitet werden?</p>
+                                      <div class="mb-4">                       
+                                        <a href="editMasterServer.php?Server='.$_POST['ssh2IP'].'" class="btn btn-success btn-xs mb-1">Ja</a>
+                                        <a href="overviewMasterServers.php" class="btn btn-danger btn-xs mb-1">Nein</a>
+                                      </div>
+                                  </div>';
+                        }
+                          // ENDE Abfrage ob Server bearbeitet werden soll
                           // BEGIN Abfrage ob Server neugestartet werden soll
                           if(!empty($_POST['RebootMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
                               echo '<div class="alert alert-warning" role="alert">
