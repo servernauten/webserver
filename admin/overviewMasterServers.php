@@ -87,6 +87,7 @@ else{
 
                               $server = serverCommands($_POST['ssh2IP'],$RebootMasterServer['ssh2Username'],$decrypted_password,$RebootMasterServer['ssh2Port'],'init 6');
 
+                              echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$_POST['ssh2IP'].' wird neugestartet.</div>';
                           }
                           // ENDE Server neustarten
                           // BEGIN Server runterfahren
@@ -99,13 +100,17 @@ else{
 
                               $server = serverCommands($_POST['ssh2IP'],$ShutdownMasterServer['ssh2Username'],$decrypted_password,$ShutdownMasterServer['ssh2Port'],'init 0');
 
+                              echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$_POST['ssh2IP'].' wird heruntergefahren.</div>';
                           }
                           // ENDE Server runtefahren
                           // BEGIN Server löschen
-                          //
-                          //
-                          //
-                          //
+                          if (!empty($_POST['DeleteMasterServerTrue'])){
+
+                            $sql = $pdo->prepare("DELETE FROM `server_MasterServer` WHERE `ssh2IP` = ?");
+                            $sql->execute(array(''.$_POST['ssh2IP'].''));
+                            echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$_POST['ssh2IP'].' wurde gelöscht.</div>';
+                            
+                          }
                           // ENDE Server löschen
 
                           // BEGIN Abfrage ob Server bearbeitet werden soll
@@ -152,8 +157,11 @@ else{
                             echo '<div class="alert alert-warning" role="alert">
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' gelöscht werden?</p>
                                       <div class="mb-4">
-                                      <input type="submit" name="DeleteMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
-                                      <input type="submit" name="DeleteMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      <form method="POST" action="overviewMasterServers.php">
+                                        <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
+                                        <input type="submit" name="DeleteMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
+                                        <input type="submit" name="DeleteMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
+                                      </form>
                                       </div>
                                   </div>';
                           }
