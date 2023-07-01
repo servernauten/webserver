@@ -11,8 +11,10 @@ function serverCommands($serverIP,$serverUser,$serverPassword,$serverPort,$serve
    ssh2_exec($connection, 'sudo -S <<< '.$serverPassword.' '.$serverCommand.'');
   } else {
     die('Authentication Failed...');
+    exit;
   }
 
 }
-#serverCommands('10.211.55.14','sebastian','anika1983','22','init 6');
+
+#serverCommands('192.168.2.125','sebastian','.Anika.1983.','22','init 6');
 ?>

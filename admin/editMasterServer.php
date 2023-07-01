@@ -4,8 +4,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 @include('../inc/config.inc.php'); // Include von Variable der Datenbankverbindung
+@include('inc/opensslGetCipherMethods/opensslGetCipherMethods.inc.php');
 // Datenbank Verbindung wird hergestellt
 $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$password.'');
+
+$sql = "SELECT COUNT(*) AS MasterServerTokenAnzahl FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
+        foreach ($pdo->query($sql) as $row) {
+            $MasterServerTokenAnzahl = $row['MasterServerTokenAnzahl'];
+            echo $MasterServerTokenAnzahl;
+        }
 
   if( $_SESSION['AdminSessionTrue'] != '1' ){
     header("Location: ../admin.php");
@@ -27,10 +34,14 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          // End API Licence
 
       }
+      if( $MasterServerTokenAnzahl != '1' ){
+        header("Location: overviewMasterServers.php");
+        exit;
+      }
+      
       if (!empty($_POST['submitCreateMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
         $createMasterServer = '1';
         @include('../inc/inputCheck/inputCheck.inc.php');
-        @include('inc/opensslGetCipherMethods/opensslGetCipherMethods.inc.php');
         @include('inc/createMasterServer/createMasterServer.inc.php');
 
       }
@@ -69,7 +80,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
     <?php include('tpl/nav.tpl.php'); ?>
     <?php include('tpl/sidebar.tpl.php'); ?>
     <main>
-      <form method="POST" action="createMasterServer.php">
+      <form method="POST" action="editMasterServer.php?Server=<?php echo $_GET['Server']; ?>">
         <div class="container-fluid ">
           <?php include('inc/licence/licenceCheck.inc.php'); ?>
           <?php echo licenceCheck($servernautAPI,$timeStamp); ?>
@@ -90,7 +101,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start any identifier -->
                                   <div class="form-group mb-3">
                                       <label for="Company">Any Identifier</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="anyIdentifier" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['anyIdentifier'].'">';
@@ -102,7 +113,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <div class="form-group mb-3">
                                       <label>Reseller</label>
                                       <select name="reseller" class="form-control select2-single" data-width="100%">
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             if( $row['reseller'] == '0' ){
                 echo '<option value="0">No</option>
@@ -121,7 +132,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <div class="form-group mb-3">
                                       <label>Server Active</label>
                                       <select name="serverActive" class="form-control select2-single" data-width="100%">
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             if( $row['serverActive'] == '0' ){
                 echo '<option value="0">No</option>
@@ -146,10 +157,11 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                 <!-- Start SSH2 IP Address -->
                                 <div class="form-group mb-3">
                                     <label for="ssh2ip">SSH2 IP Address</label> 
-  <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+  <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
+            $ssh2_ip = encrypt_decrypt('decrypt', $row['ssh2IP']);
             echo '<input name="ssh2IP" type="text" class="form-control"
-            aria-describedby="basic-addon1" required value="'.$row['ssh2IP'].'">'; 
+            aria-describedby="basic-addon1" required value="'.$ssh2_ip.'">'; 
         }
     ?>                                   
                                 </div>
@@ -158,14 +170,14 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <div class="form-group mb-3">
                                       <label for="FTP / SSH2 Port">FTP / SSH2 Port</label>
                                       <div class="input-group">
-  <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+  <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="ftp" type="text" class="form-control"
             aria-describedby="basic-addon1" placeholder="ftp port" value="'.$row['ftpPort'].'">';
         }
     ?>                                      
                                           <span class="input-group-addon"></span>
-   <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+   <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="ssh" type="text" class="form-control"
             aria-describedby="basic-addon1" placeholder="ftp port" value="'.$row['ssh2Port'].'">';
@@ -177,7 +189,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start SSH2 IP Address -->
                                   <div class="form-group mb-3">
                                       <label for="ssh2Username">SSH2 Username</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="ssh2Username" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['ssh2Username'].'">';
@@ -189,8 +201,13 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start SSH2 IP Address -->
                                   <div class="form-group mb-3">
                                       <label for="ssh2Password">SSH2 Password</label>
-                                      <input name="ssh2Password" type="text" class="form-control"
-                                          aria-describedby="basic-addon1" value="DATENBANK NOCH VERBINDEN">
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
+        foreach ($pdo->query($sql) as $row) {
+            $ssh2_password = encrypt_decrypt('decrypt', $row['ssh2Password']);
+            echo '<input name="ssh2Password" type="text" class="form-control"
+            aria-describedby="basic-addon1" value="'.$ssh2_password.'">';
+        }
+    ?> 
                                   </div>
                                   <!-- End SSH2 IP Address -->
                               </div>
@@ -213,7 +230,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start Core -->
                                   <div class="form-group mb-3">
                                       <label for="core">Core</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="core" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['core'].'">';
@@ -224,7 +241,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start Ram (MB) -->
                                   <div class="form-group mb-3">
                                       <label for="ram">Ram (MB)</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="ram" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['ram'].'">';
@@ -235,7 +252,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start description -->
                                   <div class="form-group mb-3">
                                       <label for="description">Description</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="description" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['description'].'">';
@@ -246,7 +263,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start maximum Slots -->
                                   <div class="form-group mb-3">
                                       <label for="maximumSlots">maximum Slots</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="maximumSlots" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['maximumSlots'].'">';
@@ -258,7 +275,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   <!-- Start maximum Server -->
                                   <div class="form-group mb-3">
                                       <label for="maximumServer">maximum Server</label>
-    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `ssh2IP` = '{$_GET['Server']}'";
+    <?php $sql = "SELECT * FROM `server_MasterServer` WHERE `MasterServerToken` = '{$_GET['Server']}'";
         foreach ($pdo->query($sql) as $row) {
             echo '<input name="maximumServer" type="text" class="form-control"
             aria-describedby="basic-addon1" value="'.$row['maximumServer'].'">';
@@ -273,7 +290,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                       </div>
 
                       <div class="col-12 col-xl-6 mb-4">
-                          <div class="card h-100">
+                          <div class="card h-10">
                               <div class="card-body">
                                   <!-- Start Mobile -->
                                   <!-- Start Create Master Server Button -->
@@ -282,7 +299,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                   $statement->execute();
                                   $row = $statement->fetch();
                                   if( $row['masterServerQuantity'] <= $servernautAPI->MasterServer OR $row['masterServerQuantity'] == 'unlimited' ){
-                                    echo '<input name="submitCreateMasterServer" type="submit" class="btn btn-primary d-block mt-3" value="Edit Master Server"></input>';
+                                    echo '<input name="submitEditMasterServer" type="submit" class="btn btn-primary d-block mt-3" value="Edit Master Server"></input>';
                                   }else {
                                     echo '<div class="alert alert-danger" role="alert">
                                             Sie haben die maximale Anzahl von '.$servernautAPI->MasterServer.' erreicht.
@@ -290,7 +307,7 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
 
                                   }
                                   ?>
-                                  <!-- End Create Master Server Button -->
+                                  <!-- End Edit Master Server Button -->
 
                               </div>
                           </div>

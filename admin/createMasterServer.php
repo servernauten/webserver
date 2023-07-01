@@ -27,13 +27,6 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
          // End API Licence
 
       }
-      if (!empty($_POST['submitCreateMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
-        $createMasterServer = '1';
-        @include('../inc/inputCheck/inputCheck.inc.php');
-        @include('inc/opensslGetCipherMethods/opensslGetCipherMethods.inc.php');
-        @include('inc/createMasterServer/createMasterServer.inc.php');
-
-      }
     }
   }
 
@@ -73,6 +66,14 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
         <div class="container-fluid ">
           <?php include('inc/licence/licenceCheck.inc.php'); ?>
           <?php echo licenceCheck($servernautAPI,$timeStamp); ?>
+          
+          <?php if (!empty($_POST['submitCreateMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+        $createMasterServer = '1';
+        @include('../inc/inputCheck/inputCheck.inc.php');
+        @include('inc/opensslGetCipherMethods/opensslGetCipherMethods.inc.php');
+        @include('inc/createMasterServer/createMasterServer.inc.php'); 
+
+      } ?>
           <div class="row">
               <div class="col-12">
                   <h1>Create Master Server</h1>
@@ -131,10 +132,10 @@ $pdo = new PDO('mysql:host='.$host.';dbname='.$dbname.'', ''.$dbuser .'', ''.$pa
                                       <label for="FTP / SSH2 Port">FTP / SSH2 Port</label>
                                       <div class="input-group">
                                         <input name="ftp" type="text" class="form-control"
-                                            aria-describedby="basic-addon1" placeholder="ftp port">
+                                            aria-describedby="basic-addon1" placeholder="ftp port" value="21">
                                           <span class="input-group-addon"></span>
                                           <input name="ssh2Port" type="text" class="form-control"
-                                              aria-describedby="basic-addon1" placeholder="ssh2 port">
+                                              aria-describedby="basic-addon1" placeholder="ssh2 port" value="22">
                                       </div>
                                   </div>
                                   <!-- End FTP / SSH2 Port -->

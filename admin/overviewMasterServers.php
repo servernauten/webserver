@@ -78,16 +78,18 @@ else{
                         <div class="card-body">
                           <?php
                           // BEGIN Server neustarten
-                          if (!empty($_POST['RebootMasterServerTrue']) AND serverPingCheckForCommand($_POST['ssh2IP']) == '1'){
-
-                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$_POST['ssh2IP']}'";
+                          if (!empty($_POST['RebootMasterServerTrue'])){
+                              $encrypted_ssh2IP = encrypt_decrypt('encrypt', $_POST['ssh2IP']);
+                              $sql = "SELECT * FROM server_MasterServer WHERE `ssh2IP` = '{$encrypted_ssh2IP}'";
                               $RebootMasterServer = $pdo->query($sql)->fetch();
+
+                              echo $RebootMasterServer['ssh2Username'];
 
                               $decrypted_password = encrypt_decrypt('decrypt', $RebootMasterServer['ssh2Password']);
 
                               $server = serverCommands($_POST['ssh2IP'],$RebootMasterServer['ssh2Username'],$decrypted_password,$RebootMasterServer['ssh2Port'],'init 6');
 
-                              echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$_POST['ssh2IP'].' wird neugestartet.</div>';
+                              echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$RebootMasterServer['ssh2Username'].' wird neugestartet.</div>';
                           }
                           // ENDE Server neustarten
                           // BEGIN Server runterfahren
@@ -106,10 +108,9 @@ else{
                           // BEGIN Server löschen
                           if (!empty($_POST['DeleteMasterServerTrue'])){
 
-                            $sql = $pdo->prepare("DELETE FROM `server_MasterServer` WHERE `ssh2IP` = ?");
-                            $sql->execute(array(''.$_POST['ssh2IP'].''));
+                            $sql = $pdo->prepare("DELETE FROM `server_MasterServer` WHERE `id` = ?");
+                            $sql->execute(array(''.$_POST['serverID'].''));
                             echo '<div class="alert alert-success" role="alert">Der Server mit der IP '.$_POST['ssh2IP'].' wurde gelöscht.</div>';
-                            
                           }
                           // ENDE Server löschen
 
@@ -118,7 +119,7 @@ else{
                             echo '<div class="alert alert-warning" role="alert">
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' bearbeitet werden?</p>
                                       <div class="mb-4">                       
-                                        <a href="editMasterServer.php?Server='.$_POST['ssh2IP'].'" class="btn btn-success btn-xs mb-1">Ja</a>
+                                        <a href="editMasterServer.php?Server='.$_POST['MasterServerToken'].'" class="btn btn-success btn-xs mb-1">Ja</a>
                                         <a href="overviewMasterServers.php" class="btn btn-danger btn-xs mb-1">Nein</a>
                                       </div>
                                   </div>';
@@ -158,6 +159,7 @@ else{
                                       <p>Soll der Master Server mit der IP '.$_POST['ssh2IP'].' gelöscht werden?</p>
                                       <div class="mb-4">
                                       <form method="POST" action="overviewMasterServers.php">
+                                        <input type="hidden" name="serverID" value="'.$_POST['serverID'].'" />
                                         <input type="hidden" name="ssh2IP" value="'.$_POST['ssh2IP'].'" />
                                         <input type="submit" name="DeleteMasterServerTrue" class="btn btn-success btn-xs mb-1" value="Ja"></input>
                                         <input type="submit" name="DeleteMasterServerFalse" class="btn btn-danger btn-xs mb-1" value="Nein"></input>
@@ -168,6 +170,7 @@ else{
                           // ENDE Abfrage ob Server gelöscht werden soll
                           // BEGIN Ausgabe Server Ping
                           if(!empty($_POST['PingMasterServer']) AND md5($_SERVER['SERVER_NAME']) == $servernautAPI->DomainKey AND $timeStamp < $servernautAPI->LicenceEnd ){
+                            
                             echo serverPing($_POST['ssh2IP']);
                           }
                           // ENDE Ausgabe Server Ping
@@ -188,8 +191,9 @@ else{
       <?php
       $statement = $pdo->query("SELECT `id`,`ssh2IP`,`serverActive`,`description`,`maximumServer`,`ram`,`MasterServerToken` FROM `server_MasterServer`");
       while($row = $statement->fetch()) {
+        $ssh2_ip = encrypt_decrypt('decrypt', $row['ssh2IP']);
          echo '<tr>
-                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['ssh2IP'].'</a></td>
+                 <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$ssh2_ip.'</a></td>
                  <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['serverActive'].'</td>
                  <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">'.$row['description'].'</a></td>
                  <td><a href="overviewMasterServer.php?MasterServerID='.$row['MasterServerToken'].'">0 / '.$row['maximumServer'].'</a></td>
@@ -197,7 +201,8 @@ else{
                  <td><div class="mb-4">
                      <form method="POST" action="overviewMasterServers.php">
                      <input type="hidden" name="serverID" value="'.$row['id'].'">
-                     <input type="hidden" name="ssh2IP" value="'.$row['ssh2IP'].'">
+                     <input type="hidden" name="ssh2IP" value="'.$ssh2_ip.'">
+                     <input type="hidden" name="MasterServerToken" value="'.$row['MasterServerToken'].'">
                      <input type="submit" name="PingMasterServer" class="btn btn-info btn-xs mb-1" value="Server Ping"></input>
                      <input type="submit" name="EditMasterServer" class="btn btn-success btn-xs mb-1" value="Edit"></input>
                      <input type="submit" name="RebootMasterServer" class="btn btn-primary btn-xs mb-1" value="Reboot"></input>
